@@ -1,0 +1,607 @@
+:root {
+    --primary: #3a6ea5;
+    --secondary: #f0f4f8;
+    --danger: #e74c3c;
+    --warning: #f39c12;
+    --success: #27ae60;
+    --text: #333;
+    --light-text: #767676;
+    --border: #ddd;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f7f9fc;
+    color: var(--text);
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header/Navbar */
+
+/* Navbar styles */
+header {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+  
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+  
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+}
+  
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: #3a86ff;
+}
+  
+.logo img {
+    height: 40px;
+    margin-right: 10px;
+}
+  
+.nav-links {
+    display: flex;
+    list-style: none;
+}
+  
+.nav-links li {
+    margin: 0 15px;
+}
+  
+.nav-links a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+  
+.nav-links a:hover {
+    color: var(--primary);
+}
+  
+.profile-dropdown {
+    display: flex;
+    align-items: center;
+}
+  
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+}
+
+/* Main content */
+.main-content {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Card Component */
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 10px;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.card-action {
+    color: var(--primary);
+    font-size: 0.9rem;
+    cursor: pointer;
+}
+
+/* User Info Section */
+.user-info {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.profile-picture-container {
+    position: relative;
+}
+
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--secondary);
+}
+
+.edit-photo-btn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.user-details {
+    flex: 1;
+}
+
+.user-name {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.user-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.user-detail-item {
+    display: flex;
+    align-items: center;
+}
+
+.detail-label {
+    color: var(--light-text);
+    font-size: 0.9rem;
+    width: 100px;
+}
+
+.detail-value {
+    font-weight: 500;
+}
+
+/* Health Status Section */
+.health-status {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.status-item {
+    flex: 1;
+    min-width: 200px;
+    background: var(--secondary);
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.status-label {
+    font-size: 0.9rem;
+    color: var(--light-text);
+    margin-bottom: 5px;
+}
+
+.status-value {
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.status-low {
+    color: var(--success);
+}
+
+.status-moderate {
+    color: var(--warning);
+}
+
+.status-high {
+    color: var(--danger);
+}
+
+/* Risk Assessment Section */
+.stroke-risk-pie {
+    max-width: 700px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.chart-container {
+    position: relative;
+    margin: auto;
+    height: 60vh;
+    width: 80vh;
+    max-width: 100%;
+}
+
+.risk-factors {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.risk-factor {
+    background: #f8f8f8;
+    padding: 10px 15px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.risk-factor.high {
+    background: rgba(231, 76, 60, 0.1);
+    color: var(--danger);
+}
+
+.risk-factor.moderate {
+    background: rgba(243, 156, 18, 0.1);
+    color: var(--warning);
+}
+
+.doctor-recommendation {
+    background: rgba(58, 110, 165, 0.1);
+    border-left: 3px solid var(--primary);
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+/* Health Records Section */
+.records-list {
+    margin-top: 15px;
+}
+
+.record-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.record-item:last-child {
+    border-bottom: none;
+}
+
+.record-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.record-date {
+    font-size: 0.9rem;
+    color: var(--light-text);
+}
+
+.record-title {
+    font-weight: 500;
+}
+
+.record-description {
+    font-size: 0.9rem;
+    color: var(--light-text);
+}
+
+.record-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn {
+    padding: 8px 15px;
+    border-radius: 5px;
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.3s;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: rgba(58, 110, 165, 0.1);
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #2a5d8f;
+}
+
+.upload-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 15px;
+}
+
+/* Progress Tracker Section */
+.progress-chart {
+    width: 100%;
+    height: 250px;
+    background: var(--secondary);
+    border-radius: 8px;
+    margin: 15px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.insights {
+    background: rgba(39, 174, 96, 0.1);
+    border-left: 3px solid var(--success);
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+/* Recommendations Section */
+.recommendations-list {
+    margin-top: 15px;
+}
+
+.recommendation-item {
+    display: flex;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.recommendation-item:last-child {
+    border-bottom: none;
+}
+
+.recommendation-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(58, 110, 165, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    font-size: 1.2rem;
+}
+
+.recommendation-content {
+    flex: 1;
+}
+
+.recommendation-title {
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.recommendation-description {
+    font-size: 0.9rem;
+    color: var(--light-text);
+}
+
+/* Emergency Section */
+.emergency-contacts {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    background: rgba(58, 110, 165, 0.05);
+}
+
+.contact-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.contact-details {
+    flex: 1;
+}
+
+.contact-name {
+    font-weight: 500;
+}
+
+.contact-role {
+    font-size: 0.8rem;
+    color: var(--light-text);
+}
+
+.contact-number {
+    font-size: 0.9rem;
+}
+
+.contact-call {
+    color: var(--success);
+    cursor: pointer;
+}
+
+.emergency-btn {
+    background: var(--danger);
+    color: white;
+    width: 100%;
+    padding: 15px;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.emergency-btn:hover {
+    background: #c0392b;
+}
+
+/* Footer */
+footer {
+    background: white;
+    padding: 20px 0;
+    margin-top: 40px;
+    border-top: 1px solid var(--border);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer-links a {
+    text-decoration: none;
+    color: var(--light-text);
+    font-size: 0.9rem;
+    transition: color 0.3s;
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+}
+
+.social-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    transition: background 0.3s;
+}
+
+.social-icon:hover {
+    background: rgba(58, 110, 165, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .user-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .user-details-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-label {
+        width: 150px;
+    }
+
+    .navbar {
+        flex-direction: column;
+        height: auto;
+        padding: 15px 0;
+    }
+      
+    .logo {
+        margin-bottom: 15px;
+    }
+      
+    .nav-links {
+        width: 100%;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+      
+    .nav-links li {
+        margin: 0 10px;
+    }
+}

@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stroke Risk Assessment - Riskometer</title>
+    <!-- <script src="js/risk2.js"></script> -->
+    <link rel="stylesheet" href="css/risk.css">
+    <link rel="stylesheet" href="css/user.css">
+</head>
+<body>
+    <header>
+        <div class="container navbar">
+            <div class="logo">
+                <img src="/images/Strokelogo.png" alt="StrokeCare Logo">
+                StrokeCare
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="risk2.html">Riskometer</a></li>
+                <li><a href="#">Help</a></li>
+            </ul>
+            <div class="profile-dropdown">
+                <a href="user.html"><img src="/images/user.png" alt="Profile Picture" class="profile-icon"></a>
+            </div>
+        </div>
+    </header>
+    
+    <h1>Stroke Risk Assessment - Riskometer</h1>
+    <p>Complete this form to assess your risk of stroke. The assessment is based on various health parameters and lifestyle factors.</p>
+    
+    <form id="riskAssessmentForm">
+        <div class="form-section">
+            <h2>A. General Information</h2>
+            
+            <div class="form-group">
+                <label for="name">Name (Initials):</label>
+                <input type="text" id="name" name="name">
+            </div>
+            
+            <div class="form-group">
+                <label for="age">Age (Years):</label>
+                <input type="number" id="age" name="age" min="18" max="120">
+            </div>
+            
+            <div class="form-group">
+                <label>Gender:</label>
+                <div class="radio-inline">
+                    <input type="radio" id="male" name="gender" value="male">
+                    <label for="male">Male</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="female" name="gender" value="female">
+                    <label for="female">Female</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email ID:</label>
+                <input type="email" id="email" name="email">
+            </div>
+            
+            <div class="form-group">
+                <label>Marital Status:</label>
+                <div class="radio-inline">
+                    <input type="radio" id="single" name="maritalStatus" value="single">
+                    <label for="single">Single</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="married" name="maritalStatus" value="married">
+                    <label for="married">Married</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="locality">Locality:</label>
+                <input type="text" id="locality" name="locality">
+            </div>
+            
+            <div class="form-group">
+                <label for="stayDuration">Duration of stay (Years):</label>
+                <input type="number" id="stayDuration" name="stayDuration" min="0">
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>B. Basic Parameters</h2>
+            
+            <div class="form-group">
+                <label for="systolic">Blood Pressure - Systolic (mmHg):</label>
+                <input type="number" id="systolic" name="systolic" min="70" max="250">
+            </div>
+            
+            <div class="form-group">
+                <label for="diastolic">Blood Pressure - Diastolic (mmHg):</label>
+                <input type="number" id="diastolic" name="diastolic" min="40" max="150">
+            </div>
+            
+            <div class="form-group">
+                <label for="pulse">Pulse (beats per minute):</label>
+                <input type="number" id="pulse" name="pulse" min="40" max="200">
+            </div>
+            
+            <div class="form-group">
+                <label for="weight">Weight (kg):</label>
+                <input type="number" id="weight" name="weight" min="20" max="300" step="0.1">
+            </div>
+            
+            <div class="form-group">
+                <label for="height">Height (cm):</label>
+                <input type="number" id="height" name="height" min="1" max="250" step="0.1">
+            </div>
+            
+            <div class="form-group">
+                <label for="bmi">BMI (kg/m²):</label>
+                <input type="number" id="bmi" name="bmi" readonly>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>C. Personal History</h2>
+            
+            <div class="form-group">
+                <label>Do you engage in regular physical activity or exercise?</label>
+                <div class="radio-inline">
+                    <input type="radio" id="exerciseYes" name="exercise" value="yes">
+                    <label for="exerciseYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="exerciseNo" name="exercise" value="no">
+                    <label for="exerciseNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group" id="exerciseFrequencyGroup" style="display: none;">
+                <label>How often do you exercise?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="exerciseDaily" name="exerciseFrequency" value="daily">
+                        <label for="exerciseDaily">Daily</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="exercise3to5" name="exerciseFrequency" value="3-5">
+                        <label for="exercise3to5">3-5 times per week</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="exercise1to2" name="exerciseFrequency" value="1-2">
+                        <label for="exercise1to2">1-2 times per week</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>What is your typical diet?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="dietVeg" name="diet" value="veg">
+                        <label for="dietVeg">Vegetarian</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="dietNonVeg" name="diet" value="nonveg">
+                        <label for="dietNonVeg">Non-Vegetarian</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="dietMixed" name="diet" value="mixed">
+                        <label for="dietMixed">Mixed</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>How often do you order outside food (Zomato/Swiggy/etc.)?</label>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="outsideFoodNever" name="outsideFood" value="never">
+                        <label for="outsideFoodNever">Never</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="outsideFoodRarely" name="outsideFood" value="rarely">
+                        <label for="outsideFoodRarely">Rarely (Once a month or less)</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="outsideFoodOccasionally" name="outsideFood" value="occasionally">
+                        <label for="outsideFoodOccasionally">Occasionally (2-3 times a month)</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="outsideFoodRegularly" name="outsideFood" value="regularly">
+                        <label for="outsideFoodRegularly">Regularly (Once a week)</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="outsideFoodFrequently" name="outsideFood" value="frequently">
+                        <label for="outsideFoodFrequently">Frequently (Multiple times a week)</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="education">Educational Level:</label>
+                <select id="education" name="education">
+                    <option value="">Select</option>
+                    <option value="highschool">High School</option>
+                    <option value="undergraduate">Undergraduate</option>
+                    <option value="graduate">Graduate</option>
+                    <option value="specialty">Specialty</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="profession">Professional Level:</label>
+                <select id="profession" name="profession">
+                    <option value="">Select</option>
+                    <option value="engineer">Engineer</option>
+                    <option value="chemist">Chemist</option>
+                    <option value="software">Software Consultant</option>
+                    <option value="doctor">Doctor</option>
+                    <option value="nursing">Nursing</option>
+                    <option value="teacher">Teacher</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Do you consume alcohol?</label>
+                <div class="radio-inline">
+                    <input type="radio" id="alcoholYes" name="alcohol" value="yes">
+                    <label for="alcoholYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="alcoholNo" name="alcohol" value="no">
+                    <label for="alcoholNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Do you smoke or consume tobacco?</label>
+                <div class="radio-inline">
+                    <input type="radio" id="smokeYes" name="smoke" value="yes">
+                    <label for="smokeYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="smokeNo" name="smoke" value="no">
+                    <label for="smokeNo">No</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>D. Medical History</h2>
+            
+            <div class="form-group">
+                <label>High Blood Pressure (Hypertension):</label>
+                <div class="radio-inline">
+                    <input type="radio" id="hypertensionYes" name="hypertension" value="yes">
+                    <label for="hypertensionYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="hypertensionNo" name="hypertension" value="no">
+                    <label for="hypertensionNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Diabetes:</label>
+                <div class="radio-inline">
+                    <input type="radio" id="diabetesYes" name="diabetes" value="yes">
+                    <label for="diabetesYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="diabetesNo" name="diabetes" value="no">
+                    <label for="diabetesNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>High Cholesterol:</label>
+                <div class="radio-inline">
+                    <input type="radio" id="cholesterolYes" name="cholesterol" value="yes">
+                    <label for="cholesterolYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="cholesterolNo" name="cholesterol" value="no">
+                    <label for="cholesterolNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Irregular Heartbeats (Atrial Fibrillation):</label>
+                <div class="radio-inline">
+                    <input type="radio" id="irregularHeartbeatsYes" name="irregularHeartbeats" value="yes">
+                    <label for="irregularHeartbeatsYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="irregularHeartbeatsNo" name="irregularHeartbeats" value="no">
+                    <label for="irregularHeartbeatsNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Snoring:</label>
+                <div class="radio-inline">
+                    <input type="radio" id="snoringYes" name="snoring" value="yes">
+                    <label for="snoringYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="snoringNo" name="snoring" value="no">
+                    <label for="snoringNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="otherMedical">Other Medical Conditions:</label>
+                <input type="text" id="otherMedical" name="otherMedical">
+            </div>
+            
+            <div class="form-group">
+                <label>How often do you check your Blood Pressure and Blood Sugar (if applicable)?</label>
+                <select id="checkFrequency" name="checkFrequency">
+                    <option value="">Select</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="fewMonths">Every few months</option>
+                    <option value="yearly">Yearly</option>
+                    <option value="na">Not applicable</option>
+                </select>
+            </div>
+            
+            <div id="femaleOnlyQuestions" style="display: none;">
+                <div class="form-group">
+                    <label>Have you ever taken oral contraceptives or hormonal therapy?</label>
+                    <div class="radio-inline">
+                        <input type="radio" id="oralContraceptivesYes" name="oralContraceptives" value="yes">
+                        <label for="oralContraceptivesYes">Yes</label>
+                    </div>
+                    <div class="radio-inline">
+                        <input type="radio" id="oralContraceptivesNo" name="oralContraceptives" value="no">
+                        <label for="oralContraceptivesNo">No</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>Do you currently take any hormonal therapy?</label>
+                    <div class="radio-inline">
+                        <input type="radio" id="hormoneTherapyYes" name="hormoneTherapy" value="yes">
+                        <label for="hormoneTherapyYes">Yes</label>
+                    </div>
+                    <div class="radio-inline">
+                        <input type="radio" id="hormoneTherapyNo" name="hormoneTherapy" value="no">
+                        <label for="hormoneTherapyNo">No</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>History of hypertension during pregnancy:</label>
+                    <div class="radio-inline">
+                        <input type="radio" id="pregnancyHypertensionYes" name="pregnancyHypertension" value="yes">
+                        <label for="pregnancyHypertensionYes">Yes</label>
+                    </div>
+                    <div class="radio-inline">
+                        <input type="radio" id="pregnancyHypertensionNo" name="pregnancyHypertension" value="no">
+                        <label for="pregnancyHypertensionNo">No</label>
+                    </div>
+                    <div class="radio-inline">
+                        <input type="radio" id="pregnancyHypertensionNA" name="pregnancyHypertension" value="na">
+                        <label for="pregnancyHypertensionNA">Not Applicable</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>E. Family History</h2>
+            
+            <div class="form-group">
+                <label>Do you have a family history of brain or heart stroke, hypertension, or diabetes?</label>
+                <div class="radio-inline">
+                    <input type="radio" id="familyHistoryYes" name="familyHistory" value="yes">
+                    <label for="familyHistoryYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="familyHistoryNo" name="familyHistory" value="no">
+                    <label for="familyHistoryNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="dependents">How many family members depend on you financially or otherwise?</label>
+                <input type="number" id="dependents" name="dependents" min="0">
+            </div>
+            
+            <div class="form-group">
+                <label>Do you currently have medical insurance?</label>
+                <div class="radio-inline">
+                    <input type="radio" id="insuranceYes" name="insurance" value="yes">
+                    <label for="insuranceYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="insuranceNo" name="insurance" value="no">
+                    <label for="insuranceNo">No</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>F. Past History</h2>
+            
+            <div class="form-group">
+                <label>Thyroid disease:</label>
+                <div class="radio-inline">
+                    <input type="radio" id="thyroidYes" name="thyroid" value="yes">
+                    <label for="thyroidYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="thyroidNo" name="thyroid" value="no">
+                    <label for="thyroidNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Coronary Artery Disease/Ischemic Heart Disease (CAD/IHD):</label>
+                <div class="radio-inline">
+                    <input type="radio" id="cadYes" name="cad" value="yes">
+                    <label for="cadYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="cadNo" name="cad" value="no">
+                    <label for="cadNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Bronchial Asthma or Obstructive Sleep Apnea (OSA):</label>
+                <div class="radio-inline">
+                    <input type="radio" id="asthmaYes" name="asthma" value="yes">
+                    <label for="asthmaYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="asthmaNo" name="asthma" value="no">
+                    <label for="asthmaNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Migraine:</label>
+                <div class="radio-inline">
+                    <input type="radio" id="migraineYes" name="migraine" value="yes">
+                    <label for="migraineYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="migraineNo" name="migraine" value="no">
+                    <label for="migraineNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>History of Transient Ischemic Attack (TIA):</label>
+                <div class="radio-inline">
+                    <input type="radio" id="tiaYes" name="tia" value="yes">
+                    <label for="tiaYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="tiaNo" name="tia" value="no">
+                    <label for="tiaNo">No</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>History of previous brain stroke, coronary, or kidney disease:</label>
+                <div class="radio-inline">
+                    <input type="radio" id="previousHistoryYes" name="previousHistory" value="yes">
+                    <label for="previousHistoryYes">Yes</label>
+                </div>
+                <div class="radio-inline">
+                    <input type="radio" id="previousHistoryNo" name="previousHistory" value="no">
+                    <label for="previousHistoryNo">No</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-section">
+            <h2>G. Symptoms</h2>
+            
+            <div class="form-group">
+                <label>Have you experienced any of the following symptoms?</label>
+                <div class="symptoms-list">
+                    <div class="radio-option">
+                        <input type="checkbox" id="symptomBalance" name="symptoms" value="balance">
+                        <label for="symptomBalance">Loss of balance or coordination</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="checkbox" id="symptomVision" name="symptoms" value="vision">
+                        <label for="symptomVision">Sudden vision changes (blurred vision or loss of vision)</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="checkbox" id="symptomTingling" name="symptoms" value="tingling">
+                        <label for="symptomTingling">Tingling, numbness in the limbs</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="checkbox" id="symptomWeakness" name="symptoms" value="weakness">
+                        <label for="symptomWeakness">Sudden weakness or heaviness of limbs or facial weakness</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="checkbox" id="symptomSpeech" name="symptoms" value="speech">
+                        <label for="symptomSpeech">Difficulty speaking, slurred speech, or trouble understanding speech</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="checkbox" id="symptomHeadache" name="symptoms" value="headache">
+                        <label for="symptomHeadache">Severe headache with no known cause</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="checkbox" id="symptomDizziness" name="symptoms" value="dizziness">
+                        <label for="symptomDizziness">Repeated episodes of giddiness/early morning dizziness</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="checkbox" id="symptomFatigue" name="symptoms" value="fatigue">
+                        <label for="symptomFatigue">Frequent episodes of severe fatigue</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="checkbox" id="symptomNone" name="symptoms" value="none">
+                        <label for="symptomNone">None of the above</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <button type="button" id="calculateRiskBtn">Calculate Risk Score</button>
+    </form>
+    
+    <div id="riskResult" class="risk-score">
+        <h2>Your Stroke Risk Assessment</h2>
+        <div>
+            <p><strong>Total Risk Score: </strong><span id="totalScore">0</span></p>
+            <p><strong>Risk Category: </strong><span id="riskCategory">Low</span></p>
+        </div>
+        
+        <div class="risk-meter-container">
+            <p>Risk Level:</p>
+            <div class="risk-meter">
+                <div class="risk-pointer" id="riskPointer"></div>
+            </div>
+            <div class="risk-labels">
+                <span>Low Risk</span>
+                <span>Moderate Risk</span>
+                <span>High Risk</span>
+            </div>
+        </div>
+        
+        <div id="recommendations">
+            <h3>Recommendations</h3>
+            <div id="recommendationText"></div>
+        </div>
+    </div>
+<script>
+     // Calculate BMI when weight or height changes
+ document.getElementById('weight').addEventListener('input', calculateBMI);
+ document.getElementById('height').addEventListener('input', calculateBMI);
+ 
+ // Show/hide exercise frequency based on exercise selection
+ document.querySelectorAll('input[name="exercise"]').forEach(radio => {
+     radio.addEventListener('change', function() {
+         const exerciseFrequencyGroup = document.getElementById('exerciseFrequencyGroup');
+         if (this.value === 'yes') {
+             exerciseFrequencyGroup.style.display = 'block';
+         } else {
+             exerciseFrequencyGroup.style.display = 'none';
+         }
+     });
+ });
+ 
+ // Show/hide female-only questions based on gender selection
+ document.querySelectorAll('input[name="gender"]').forEach(radio => {
+     radio.addEventListener('change', function() {
+         const femaleQuestions = document.getElementById('femaleOnlyQuestions');
+         if (this.value === 'female') {
+             femaleQuestions.style.display = 'block';
+         } else {
+             femaleQuestions.style.display = 'none';
+         }
+     });
+ });
+ 
+ // Make "None of the above" symptom checkbox exclusive
+ document.getElementById('symptomNone').addEventListener('change', function() {
+     if (this.checked) {
+         document.querySelectorAll('input[name="symptoms"]:not(#symptomNone)').forEach(checkbox => {
+             checkbox.checked = false;
+         });
+     }
+ });
+ 
+ document.querySelectorAll('input[name="symptoms"]:not(#symptomNone)').forEach(checkbox => {
+     checkbox.addEventListener('change', function() {
+         if (this.checked) {
+             document.getElementById('symptomNone').checked = false;
+         }
+     });
+ });
+ 
+ // Calculate button click handler
+ document.getElementById('calculateRiskBtn').addEventListener('click', calculateRiskScore);
+ 
+ function calculateBMI() {
+     const weight = parseFloat(document.getElementById('weight').value);
+     const height = parseFloat(document.getElementById('height').value);
+     if (weight && height) {
+         const bmi = (weight / (height * height)).toFixed(1);
+         document.getElementById('bmi').value = bmi;
+     } else {
+         document.getElementById('bmi').value = "";
+     }
+ }
+ function calculateRiskScore() {
+    let score = 0;
+    
+    // Get all the risk factors values
+    const age = parseInt(document.getElementById('age').value) || 0;
+    const systolic = parseInt(document.getElementById('systolic').value) || 0;
+    const diastolic = parseInt(document.getElementById('diastolic').value) || 0;
+    const bmi = parseFloat(document.getElementById('bmi').value) || 0;
+    
+    // Smoking or tobacco consumption
+    if (document.getElementById('smokeYes').checked) {
+        score += 1;
+    }
+    
+    // Hypertension (>140/90)
+    if (systolic > 140 || diastolic > 90) {
+        score += 4;
+    }
+    
+    // Age more than 60
+    if (age > 60) {
+        score += 1;
+    }
+    
+    // Alcohol abuse
+    if (document.getElementById('alcoholYes').checked) {
+        score += 1;
+    }
+    
+    // Atrial fibrillation-irregular pulse
+    if (document.getElementById('irregularHeartbeatsYes').checked) {
+        score += 4;
+    }
+    
+    // Diabetes
+    if (document.getElementById('diabetesYes').checked) {
+        score += 2;
+    }
+    
+    // Obesity (BMI >30)
+    if (bmi > 30) {
+        score += 1;
+    }
+    
+    // Family history (Wellspring)
+    if (document.getElementById('familyHistoryYes').checked) {
+        score += 1;
+    }
+    
+    // Sedentary lifestyle (lack of exercise)
+    if (document.getElementById('exerciseNo').checked) {
+        score += 1;
+    }
+    
+    // History of TIA
+    if (document.getElementById('tiaYes').checked) {
+        score += 1;
+    }
+    
+    // History of previous brain stroke, coronary or kidney disease
+    if (document.getElementById('previousHistoryYes').checked) {
+        score += 1;
+    }
+    
+    // Calculate stress level based on symptoms (simplified approach)
+    const symptomsChecked = document.querySelectorAll('input[name="symptoms"]:checked:not(#symptomNone)').length;
+    if (symptomsChecked >= 2) {
+        score += 1; // Adding stress score if multiple symptoms
+    }
+    
+    // Display the results
+    document.getElementById('totalScore').textContent = score;
+    
+    // Determine risk category
+    let riskCategory = "";
+    let recommendations = "";
+    
+    if (score <= 3) {
+        riskCategory = "Low";
+        recommendations = "<p>You are a healthy individual. Maintain your current lifestyle with regular check-ups.</p>";
+    } else if (score >= 4 && score <= 7) {
+        riskCategory = "Moderate";
+        recommendations = "<p>Moderate risk detected. We recommend:</p>" +
+                         "<ul>" +
+                         "<li>Dietary modifications - reduce salt and fat intake</li>" +
+                         "<li>Regular exercise (at least 30 minutes per day)</li>" +
+                         "<li>Regular monitoring of risk factors</li>" +
+                         "<li>Follow-up with your physician every 3-6 months</li>" +
+                         "</ul>";
+    } else {
+        riskCategory = "High";
+        recommendations = "<p>High risk detected. We strongly recommend:</p>" +
+                         "<ul>" +
+                         "<li>Immediate consultation with a healthcare provider</li>" +
+                         "<li>Dietary modifications - reduce salt and fat intake</li>" +
+                         "<li>Regular exercise as advised by your doctor</li>" +
+                         "<li>Consider referrals to specialists:</li>" +
+                         "<ul>" +
+                         "<li>Ophthalmologist for retina study</li>" +
+                         "<li>Cardiologist</li>" +
+                         "<li>Neurologist</li>" +
+                         "</ul>" +
+                         "<li>Recommended investigations may include:</li>" +
+                         "<ul>" +
+                         "<li>ECG, 2D Echo, Treadmill test</li>" +
+                         "<li>Fundoscopy</li>" +
+                         "<li>Blood tests for lipid profile, homocysteine levels</li>" +
+                         "<li>Carotid doppler or neuroimaging</li>" +
+                         "</ul>" +
+                         "</ul>";
+    }
+    
+    document.getElementById('riskCategory').textContent = riskCategory;
+    document.getElementById('recommendationText').innerHTML = recommendations;
+    
+    // Position the pointer on the risk meter
+    const pointerPosition = (score / 19) * 100; // Assuming max score is 18
+    const limitedPosition = Math.min(Math.max(pointerPosition, 0), 100);
+    document.getElementById('riskPointer').style.left = limitedPosition + '%';
+    
+    // Show the risk result section
+    document.getElementById('riskResult').style.display = 'block';
+    
+    // Scroll to the results
+    document.getElementById('riskResult').scrollIntoView({ behavior: 'smooth' });
+}
+
+// Add an event listener to ensure all checkboxes are properly initialized
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize BMI calculator
+    calculateBMI();
+    
+    // Initialize all form controls
+    document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(input => {
+        if (input.checked) {
+            const event = new Event('change');
+            input.dispatchEvent(event);
+        }
+    });
+});
+</script>
+
+</body>
+</html>

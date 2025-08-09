@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StrokeCare - Patient Profile</title>
+    <link rel="stylesheet" href="css/user.css">
+    <script src="js/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+    <!-- 1. Header / Navbar -->
+    <header>
+        <div class="container navbar">
+            <div class="logo">
+                <img src="/images/Strokelogo.png" alt="StrokeCare Logo">
+                StrokeCare
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="risk2.html">Riskometer</a></li>
+                <li><a href="#">Help</a></li>
+            </ul>
+            <div class="profile-dropdown">
+                <a href="user.html"><img src="/images/user.png" alt="Profile Picture" class="profile-icon"></a>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="main-content">
+            <div class="left-column">
+                <!-- 2. User Information Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">User Information</h2>
+                        <span class="card-action">Edit Profile</span>
+                    </div>
+                    <div class="user-info">
+                        <div class="profile-picture-container">
+                            <img src="/images/user.png" alt="Profile Picture" class="profile-picture">
+                            <button class="edit-photo-btn">✏️</button>
+                        </div>
+                        <div class="user-details">
+                            <h1 class="user-name">John Doe</h1>
+                            <div class="user-details-grid">
+                                <div class="user-detail-item">
+                                    <span class="detail-label">Age:</span>
+                                    <span class="detail-value">58 years</span>
+                                </div>
+                                <div class="user-detail-item">
+                                    <span class="detail-label">Gender:</span>
+                                    <span class="detail-value">Male</span>
+                                </div>
+                                <div class="user-detail-item">
+                                    <span class="detail-label">Blood Group:</span>
+                                    <span class="detail-value">B+</span>
+                                </div>
+                                <div class="user-detail-item">
+                                    <span class="detail-label">Medical ID:</span>
+                                    <span class="detail-value">SC12345678</span>
+                                </div>
+                                <div class="user-detail-item">
+                                    <span class="detail-label">Email:</span>
+                                    <span class="detail-value">john.doe@example.com</span>
+                                </div>
+                                <div class="user-detail-item">
+                                    <span class="detail-label">Phone:</span>
+                                    <span class="detail-value">+1 (555) 123-4567</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 3. Health Status Overview -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Health Status Overview</h2>
+                        <span class="card-action">View Details</span>
+                    </div>
+                    <div class="health-status">
+                        <div class="status-item">
+                            <div class="status-label">Current Status</div>
+                            <div class="status-value status-moderate">Moderate Risk</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Last Checkup</div>
+                            <div class="status-value">Feb 15, 2025</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Next Checkup</div>
+                            <div class="status-value">Apr 18, 2025</div>
+                        </div>
+                    </div>
+                    <div class="health-status" style="margin-top: 15px;">
+                        <div class="status-item">
+                            <div class="status-label">BMI</div>
+                            <div class="status-value">28.4</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Blood Pressure</div>
+                            <div class="status-value status-moderate">140/90</div>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-label">Blood Sugar</div>
+                            <div class="status-value status-high">180 mg/dL</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 4. Stroke Risk Assessment Results -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Stroke Risk Assessment</h2>
+                        <span class="card-action">Full Report</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <div class="risk-factors">
+                        <div class="risk-factor high">High Blood Pressure</div>
+                        <div class="risk-factor high">Diabetes</div>
+                        <div class="risk-factor moderate">Cholesterol</div>
+                        <div class="risk-factor">Physical Inactivity</div>
+                        <div class="risk-factor">Family History</div>
+                    </div>
+                    <div class="doctor-recommendation">
+                        <strong>Doctor's Recommendation:</strong> Focus on controlling blood pressure with prescribed medication and dietary changes. Continue monitoring blood sugar levels daily. Schedule follow-up appointment in 2 months.
+                    </div>
+                </div>
+                
+                <!-- 5. Personal Health Records & Reports -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Health Records & Reports</h2>
+                        <span class="card-action">View All</span>
+                    </div>
+                    <div class="records-list">
+                        <div class="record-item">
+                            <div class="record-info">
+                                <span class="record-date">Feb 15, 2025</span>
+                                <div class="record-title">Regular Checkup</div>
+                                <div class="record-description">Dr. Sarah Johnson - Neurology Department</div>
+                            </div>
+                            <div class="record-actions">
+                                <button class="btn btn-outline">View</button>
+                                <button class="btn btn-outline">Download</button>
+                            </div>
+                        </div>
+                        <div class="record-item">
+                            <div class="record-info">
+                                <span class="record-date">Jan 10, 2025</span>
+                                <div class="record-title">MRI Brain Scan</div>
+                                <div class="record-description">City Hospital - Radiology Department</div>
+                            </div>
+                            <div class="record-actions">
+                                <button class="btn btn-outline">View</button>
+                                <button class="btn btn-outline">Download</button>
+                            </div>
+                        </div>
+                        <div class="record-item">
+                            <div class="record-info">
+                                <span class="record-date">Dec 05, 2024</span>
+                                <div class="record-title">Blood Test Results</div>
+                                <div class="record-description">LifeLabs Medical Laboratory</div>
+                            </div>
+                            <div class="record-actions">
+                                <button class="btn btn-outline">View</button>
+                                <button class="btn btn-outline">Download</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary upload-btn">+ Upload New Report</button>
+                </div>
+                
+                <!-- 6. Progress Tracker -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Progress Tracker</h2>
+                        <span class="card-action">Customize</span>
+                    </div>
+                    <div class="progress-chart">
+                        <img src="/api/placeholder/650/250" alt="Health Trend Chart">
+                    </div>
+                    <div class="insights">
+                        <strong>AI Insights:</strong> Your blood pressure has shown a 12% improvement over the last 3 months, correlating with your increased physical activity. Continue your current exercise regimen of daily 30-minute walks to maintain progress.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <!-- 7. Personalized Recommendations & Alerts -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Recommendations</h2>
+                        <span class="card-action">See All</span>
+                    </div>
+                    <div class="recommendations-list">
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">💊</div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">Medication Reminder</div>
+                                <div class="recommendation-description">Take Lisinopril 10mg at 8:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">🍎</div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">Diet Tip</div>
+                                <div class="recommendation-description">Incorporate more potassium-rich foods to help lower blood pressure</div>
+                            </div>
+                        </div>
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">📚</div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">Recommended Reading</div>
+                                <div class="recommendation-description">Article: "New Advances in Stroke Recovery"</div>
+                            </div>
+                        </div>
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">📅</div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">Upcoming Appointment</div>
+                                <div class="recommendation-description">Dr. Sarah Johnson - March 15, 2025 at 10:30 AM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 8. Emergency & Support Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Emergency Contacts</h2>
+                        <span class="card-action">Edit</span>
+                    </div>
+                    <div class="emergency-contacts">
+                        <div class="contact-item">
+                            <div class="contact-avatar">SJ</div>
+                            <div class="contact-details">
+                                <div class="contact-name">Dr. Sarah Johnson</div>
+                                <div class="contact-role">Primary Neurologist</div>
+                                <div class="contact-number">+1 (555) 987-6543</div>
+                            </div>
+                            <div class="contact-call">📞</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-avatar">JD</div>
+                            <div class="contact-details">
+                                <div class="contact-name">Jane Doe</div>
+                                <div class="contact-role">Wife - Emergency Contact</div>
+                                <div class="contact-number">+1 (555) 987-1234</div>
+                            </div>
+                            <div class="contact-call">📞</div>
+                        </div>
+                        <div class="contact-item">
+                            <div class="contact-avatar">MG</div>
+                            <div class="contact-details">
+                                <div class="contact-name">Mike Doe</div>
+                                <div class="contact-role">Son - Emergency Contact</div>
+                                <div class="contact-number">+1 (555) 456-7890</div>
+                            </div>
+                            <div class="contact-call">📞</div>
+                        </div>
+                    </div>
+                    <button class="emergency-btn">🚨 CALL FOR HELP</button>
+                    
+                    <div class="card-header" style="margin-top: 30px;">
+                        <h2 class="card-title">Support Resources</h2>
+                        <span class="card-action">More</span>
+                    </div>
+                    <div class="recommendations-list">
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">👥</div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">Stroke Survivors Group</div>
+                                <div class="recommendation-description">Next meeting: March 10 at 6:00 PM</div>
+                            </div>
+                        </div>
+                        <div class="recommendation-item">
+                            <div class="recommendation-icon">❓</div>
+                            <div class="recommendation-content">
+                                <div class="recommendation-title">FAQ</div>
+                                <div class="recommendation-description">Common questions about stroke recovery</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 9. Footer -->
+    <footer>
+        <div class="container footer-content">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Contact Us</a>
+            </div>
+            <div class="social-links">
+                <div class="social-icon">f</div>
+                <div class="social-icon">t</div>
+                <div class="social-icon">in</div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - Brain Line Project</title>
+    <style>
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        .card {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-content {
+            padding: 2rem;
+            flex: 1;
+        }
+
+        .card-image {
+            flex: 1;
+            min-height: 300px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .section-title {
+            color: #4a148c;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .card p {
+            margin-bottom: 1rem;
+        }
+
+        /* Reverse layout for alternating cards */
+        .card:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .card {
+                flex-direction: column !important;
+            }
+
+            .card-image {
+                min-height: 200px;
+                width: 100%;
+                order: -1; /* This makes the image appear above the content on mobile */
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/user.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <div class="container navbar">
+            <div class="logo">
+                <img src="/images/Strokelogo.png" alt="StrokeCare Logo">
+                StrokeCare
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="risk2.html">Riskometer</a></li>
+                <li><a href="#">Help</a></li>
+            </ul>
+            <div class="profile-dropdown">
+                <a href="user.html"><img src="/images/user.png" alt="Profile Picture" class="profile-icon"></a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- <h1>About The Brain Line Project</h1>
+        
+        <section id="about">
+            <p>The Brain Line Project is a comprehensive initiative dedicated to combating brain stroke, the second leading cause of death and the leading cause of adult disability worldwide. With developing countries like India accounting for 85% of global deaths from stroke, our project addresses the critical issues of poor awareness and delayed consultation that contribute to this devastating statistic.</p>
+            
+            <div class="stats-banner">
+                <h3>The Impact of Stroke</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">2nd</div>
+                        <div class="stat-label">Leading cause of death worldwide</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">1st</div>
+                        <div class="stat-label">Leading cause of adult disability</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">85%</div>
+                        <div class="stat-label">Of global deaths occur in developing countries</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">80-90%</div>
+                        <div class="stat-label">Of strokes can be prevented</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p>The Brain Line Project is a brainchild of Purva Medical Trust, founded by Dr. Ashok Hande in 2011. This charitable NGO, in collaboration with the Rotary Clubs of Navi Mumbai, has undertaken this mammoth project for the selfless service of society. We focus on leveraging widely available diagnostic tools like CT scans to address this public health crisis.</p>
+            
+            <div class="info-box">
+                <h3>Understanding Stroke Risk: SHAADOWSS</h3>
+                <p>Stroke can occur in anyone regardless of race, gender, or age. However, studies have shown that 80-90% of strokes can be prevented through lifestyle changes and medical management. We focus on the modifiable and treatable risk factors summarized as <span class="acronym">SHAADOWSS</span>:</p>
+                <ul>
+                    <li><strong>S</strong>moking</li>
+                    <li><strong>H</strong>ypertension</li>
+                    <li><strong>A</strong>lcohol abuse</li>
+                    <li><strong>A</strong>trial fibrillation</li>
+                    <li><strong>D</strong>iabetes</li>
+                    <li><strong>O</strong>besity and hyperlipidemia</li>
+                    <li><strong>W</strong>ellspring for family history</li>
+                    <li><strong>S</strong>tress</li>
+                    <li><strong>S</strong>edentary lifestyle</li>
+                </ul>
+            </div>
+        </section>
+        
+        <section id="mission">
+            <h2>Our Mission: The AAA Approach</h2>
+            <p>The Brain Line Project is undertaken to serve society's three basic needs in stroke care and prevention:</p>
+            
+            <div class="mission-cards">
+                <div class="mission-card">
+                    <h3>Awareness</h3>
+                    <p>Spreading crucial knowledge about brain stroke risk factors, symptoms, and preventive measures, empowering individuals to recognize warning signs and take proactive steps towards better health.</p>
+                </div>
+                
+                <div class="mission-card">
+                    <h3>Access</h3>
+                    <p>Accessing timely treatment at the right centre is critical in the management of brain stroke. Golden Period which is the First 3 Hours, refers to the crucial window of opportunity within the first few hours of experiencing stroke symptoms, during which prompt medical intervention can significantly improve outcomes</p>
+                </div>
+                
+                <div class="mission-card">
+                    <h3>Affordability</h3>
+                    <p>Collaborating with healthcare providers, government agencies, and philanthropic partners to make essential stroke prevention and treatment services affordable and accessible to all, regardless of socioeconomic status.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="founder">
+            <h2>About Dr. Ashok Hande</h2>
+            <div class="founder-section">
+                <div class="founder-img">
+                    <img src="/api/placeholder/400/400" alt="Dr. Ashok Hande">
+                </div>
+                <div class="founder-bio">
+                    <p>Dr. Ashok Hande is the visionary founder of the Brain Line Project and established the Purva Medical Trust in 2011. With extensive experience in neurology and stroke medicine, Dr. Hande recognized the critical gaps in stroke awareness, access to care, and affordability of treatment in India and other developing countries.</p>
+                    
+                    <p>After witnessing countless cases where delayed consultation led to preventable deaths and disabilities, Dr. Hande dedicated himself to creating a solution that addresses these fundamental challenges. His expertise in stroke diagnosis and treatment, combined with his passion for community service, led to the creation of this innovative project.</p>
+                    
+                    <p>Under Dr. Hande's leadership, the Brain Line Project has grown from a local initiative to a comprehensive program that brings together medical professionals, community volunteers, and families affected by stroke. His commitment to the belief that stroke is largely preventable through lifestyle modifications and medical management drives the project's focus on education and preventive care.</p>
+                </div>
+            </div>
+        </section> -->
+        <div class="container">
+            <!-- First Card: About the Project -->
+            <div class="card">
+                <div class="card-content">
+                    <h2 class="section-title">About the Brain Line Project</h2>
+                    <p>Brain-line is a dedicated initiative by Purva Medical Trust, focused on creating widespread awareness about brainstroke prevention and recovery. Founded with a vision to empower individuals through education and resources, we are committed to reducing the impact of brainstroke by fostering early detection, preventive measures, and comprehensive support for survivors.</p>
+                    <p>Join us in our mission to build a healthier, stroke-free society. Together, we can make a difference.</p>
+                </div>
+                <div class="card-image" style="background-image: url('/images/AboutBrainLine.jpg');"></div>
+            </div>
+    
+            <!-- Second Card: Our Mission -->
+            <div class="card">
+                <div class="card-content">
+                    <h2 class="section-title">About Our Mission</h2>
+                    <p>At Brainline, our mission is to prevent brainstrokes through education, awareness, and community support. We are dedicated to providing accessible information and resources that empower individuals to recognize the risks and signs of brainstroke, take proactive health measures, and support survivors on their journey to recovery. By fostering a community built on knowledge, compassion, and resilience, we aim to reduce the incidence of brainstrokes and improve the quality of life for those affected.</p>
+                </div>
+                <div class="card-image" style="background-image: url('/images/OurMission.jpeg');"></div>
+            </div>
+    
+            <!-- Third Card: About Dr. Ashok Hande -->
+            <div class="card">
+                <div class="card-content">
+                    <h2 class="section-title">About Dr. Ashok Hande</h2>
+                    <p>Dr. Ashok Hande is a distinguished figure in the field of neurological surgery, renowned for his expertise and dedication to enhancing the lives of his patients. With over three decades of experience, he stands as a beacon of excellence in neurosurgical care. Currently serving as the Director of the Department of Neurological Surgery at Fortis Hospital, Navi Mumbai, and as a Visiting Consultant at the esteemed Ruby Hall Clinic and Research Centre in Pune, Dr. Hande brings forth a wealth of knowledge and skill to his practice. His professional journey began in 1986, he has been doing surgery for brain stroke since 1990and since then, he has been at the forefront of pioneering advancements in neurosurgery. Dr. Hande’s areas of specialization include surgery for brain stroke, aneurysm, arteriovenous malformation (AVM), re-vascularization procedures, complex brain tumor surgery & neuro-rehabilitation. His commitment to staying abreast of the latest developments in his field ensures that his patients receive the most advanced and effective treatments available. In addition to his clinical practice, Dr. Hande is also a visionary leader who has founded the Purva Medical Foundation. This initiative is dedicated to raising awareness about brain stroke and empowering communities with knowledge to prevent and manage this debilitating condition. Through his advocacy and outreach efforts, Dr. Hande is making significant strides in improving public health outcomes.</p>
+                </div>
+                <div class="card-image" style="background-image: url('/images/Dr.AshokHande1.jpg');"></div>
+            </div>
+        </div>
+        
+        <section id="board-directors">
+            <h2>Our Board of Directors</h2>
+            <div class="board-grid">
+                <div class="board-member">
+                    <img src="/images/Dr.AshokHande2.jpg" alt="Dr. Ashok Hande">
+                    <p class="member-name">Dr. Ashok Hande</p>
+                    <p class="member-title">President</p>
+                    <p>Dr. Ashok Hande, a renowned neurosurgeon with 30+ years of experience, is the Director of Neurological Surgery at Fortis Hospital, Navi Mumbai, and a Visiting Consultant at Ruby Hall Clinic, Pune. He contributes his expertise to Purva Medical Trust.</p>
+                </div>
+                
+                <div class="board-member">
+                    <img src="/images/Mrs.PremaHande.jpg" alt="Mrs. Prema Hande">
+                    <p class="member-name">Mrs. Prema Hande</p>
+                    <p class="member-title">Treasurer</p>
+                    <p>Prema Hande, a dedicated nurse with 20 years at BYL Nair Hospital, Mumbai, has made a lasting impact on community health. As Treasurer of Purva Medical Trust, she supports its mission to raise brain stroke awareness and provide critical services.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="executive-board">
+            <h2>Our Executive Board</h2>
+            <div class="board-grid">
+                <div class="board-member">
+                    <img src="/images/AmitDave.jpg" alt="Amit Dave">
+                    <p class="member-name">Amit Dave</p>
+                    <p>Amit, a chemistry graduate and entrepreneur with 30+ years in sales, marketing, and business development, excels in chemical trading, hospitality, and startups. An IICA-accredited Independent Director, he actively supports brain stroke awareness and community health.</p>
+                </div>
+                
+                <div class="board-member">
+                    <img src="/images/Mr.Kallipur.jpg" alt="Mr. Diwakar Kallianpur">
+                    <p class="member-name">Mr. Diwakar Kallianpur</p>
+                    <p>Diwakar, with 36+ years in Finance and Marketing, spent 34 years at UTI Mutual Fund, rising to Senior EVP & Zonal Head - South. Now EVP at UTI Trustee Company, he also leads the Rotary Club of Millennium City, Navi Mumbai, championing community service.</p>
+                </div>
+                
+                <div class="board-member">
+                    <img src="/images/MilindVSewai.jpg" alt="Miliend V Sawai">
+                    <p class="member-name">Miliend V Sawai</p>
+                    <p>Milind, a chemical engineer and MBA in marketing, has 20+ years of experience with Fortune 500 companies. Now an entrepreneur in specialty chemicals and online business, he leads Rotary Club projects on education, food distribution, and youth engagement, while pursuing his passion for music with IFRM.</p>
+                </div>
+                
+                <div class="board-member">
+                    <img src="/images/Dr.AlkaPatil.jpg" alt="Dr. Alka Patnaik">
+                    <p class="member-name">Dr. Alka Patnaik</p>
+                    <p>A medical professional and social entrepreneur with 25+ years of experience across various sectors. A Guinness World Records organizer and participant, they actively served during COVID-19 and stay updated through global trainings and seminars.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="advisory-board">
+            <h2>Our Advisory Board</h2>
+            <div class="board-grid">
+                <div class="board-member">
+                    <img src="/images/Dr.AnilKarapurkar.jpg" alt="Dr. Anil Karapurkar">
+                    <p class="member-name">Dr. Anil Karapurkar</p>
+                    <p>Dr. Karapurkar, a renowned neurosurgeon and pioneer of interventional neuro-radiology in India, has led AAFITN and the Cerebrovascular Society of India. An advisor for WFITN, he upholds technical and ethical standards. With extensive experience in top hospitals, he is currently associated with Breach Candy, Shushrusha, Reliance Foundation, and Saifee Hospital.</p>
+                </div>
+                
+                <div class="board-member">
+                    <img src="/images/Dr.SantoshPrabhu.jpg" alt="Dr. Santosh Prabhu">
+                    <p class="member-name">Dr. Santosh Prabhu</p>
+                    <p>Dr. Prabhu, a neurosurgeon with 36 years of experience and 30 years in teaching, holds an MBBS, MS, and M.Ch. in Neurosurgery. As Director & Chairman of Neurosurgery at WIINS, Kolhapur, he leads with compassion, supporting community welfare through the KP Prabhu Charitable Foundation.</p>
+                </div>
+                
+                <div class="board-member">
+                    <img src="/images/Dr.AshokBhanage.jpg" alt="Dr. Ashok Bhange">
+                    <p class="member-name">Dr. Ashok Bhanage</p>
+                    <p>Dr. Bhanage, Director and Head of Neurosurgery & Radiosurgery at Ruby Hall Clinic, Pune, has been instrumental in advancing neurosurgical care. As Chairman of Kamalnayan Bajaj Cancer Centre since 2005, he helped establish it as a leading cancer facility. A member of Pune International Centre, he actively promotes awareness in social innovation, science, and technology.</p>
+                </div>
+                
+                <div class="board-member">
+                    <img src="/images/Mr.Shazad.jpg" alt="Mr. Shahzad Barodawala">
+                    <p class="member-name">Mr. Shahzad Barodawala</p>
+                    <p>Shahzad, an entrepreneur and independent web & graphic designer, actively supports sustainability and philanthropy through NGOs like Goonj and St. Jude’s Childcare Centres. Inspired by Purva Medical Trust, he contributes to brain stroke awareness campaigns to impact the community positively.</p>
+                </div>
+                
+                <div class="board-member">
+                    <img src="/images/Ms.Mazida.jpg" alt="Ms. Mazida">
+                    <p class="member-name">Ms. Mazida</p>
+                    <p>Ms. Mazida, an Assistant Vice President in banking from Madhya Pradesh, manages ultra HNI clients' wealth. Raised in a nuclear family, she attributes her patience and problem-solving skills to her parents. Her strong work ethic drives her success in the industry.</p>
+                </div>
+                
+                <div class="board-member">
+                    <img src="/images/Rashmi Kaul.png" alt="Rashmi Kaul">
+                    <p class="member-name">Rashmi Kaul</p>
+                    <p>Rashmi Kaul, a healthcare evangelist with 30 years of experience, has held C-suite roles at HealthCare Global Enterprises and Fortis Healthcare, where she led marketing and launched two hospitals. With a collaborative approach, she excels in building relationships and driving healthcare success.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="join-us">
+            <div class="join-us">
+                <h3>Join Our Mission</h3>
+                <p>We need your help to raise awareness and develop a network for this deadly but preventable disease. If you or someone you know has been affected by brain stroke, we invite you to share your experience to help others.</p>
+                <p>We are forming a WhatsApp group of like-minded people to discuss factors that led to brain hemorrhage in patients and whether timely treatment was beneficial. This information will serve as a guide to those with risk factors (SHAADOWSS) and as a major prevention tool.</p>
+                <a href="#contact" class="btn">Contact Us to Join</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="logo">Brain Line Project</div>
+                <p>A brainchild of Purva Medical Trust, founded by Dr. Ashok Hande</p>
+                <p>In collaboration with the Rotary Clubs of Navi Mumbai</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+                <p>&copy; 2025 Brain Line Project. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.querySelector('.mobile-menu-btn').addEventListener('click', function() {
+            document.querySelector('.nav-links').classList.toggle('show');
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav');
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            if (!nav.contains(event.target) || event.target === mobileMenuBtn) {
+                document.querySelector('.nav-links').classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
