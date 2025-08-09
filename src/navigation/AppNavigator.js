@@ -2,31 +2,45 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { ActivityIndicator, View, Text, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Import navigators
 import AuthNavigator from './AuthNavigator';
 import DrawerNavigator from './DrawerNavigator';
-import AuthService from '../services/AuthService'; // ✅ Fixed import path
+
+// Import Firebase auth
+import { auth } from '../firebase/config';
+import { onAuthStateChanged } from 'firebase/auth';
 
 const Stack = createStackNavigator();
 
 export default function AppNavigator() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isFirstLaunch, setIsFirstLaunch] = useState(null);
 
   useEffect(() => {
-    console.log('🔄 Setting up auth state listener...');
-    
-    const unsubscribe = AuthService.onAuthStateChanged((user) => {
+    // Check if it's first launch
+    AsyncStorage.getItem('alreadyLaunched').then(value => {
+      if (value == null) {
+        AsyncStorage.setItem('alreadyLaunched', 'true');
+        setIsFirstLaunch(true);
+      } else {
+        setIsFirstLaunch(false);
+      }
+    });
+
+    // Listen for authentication state changes
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       console.log('🔄 Auth state changed:', user ? `User: ${user.uid}` : 'No user');
       setUser(user);
       setLoading(false);
     });
 
-    return unsubscribe; // Cleanup subscription on unmount
-  }, []); // ✅ Added missing dependency array - THIS WAS THE MAIN ISSUE
+    return unsubscribe;
+  }, []);
 
-  // ✅ Proper loading screen instead of null
-  if (loading) {
+  if (loading || isFirstLaunch === null) {
     return (
       <View style={styles.loadingContainer}>
         <ActivityIndicator size="large" color="#2563eb" />
@@ -40,10 +54,10 @@ export default function AppNavigator() {
     <NavigationContainer>
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {user ? (
-          // ✅ User is logged in - show main app with drawer navigation
+          // User is logged in - show main app
           <Stack.Screen name="Main" component={DrawerNavigator} />
         ) : (
-          // ✅ User not logged in - show authentication flow
+          // User not logged in - show authentication flow
           <Stack.Screen name="Auth" component={AuthNavigator} />
         )}
       </Stack.Navigator>
@@ -51,7 +65,6 @@ export default function AppNavigator() {
   );
 }
 
-// ✅ Added proper styles for loading screen
 const styles = StyleSheet.create({
   loadingContainer: {
     flex: 1,

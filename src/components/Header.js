@@ -10,18 +10,18 @@ import {
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { AuthService } from '../services';
+import { auth } from '../firebase/config';
+import { signOut } from 'firebase/auth';
 
 const Header = ({
   title = "StrokeGuard",
-  showTabs = true
+  showTabs = true,
+  currentScreen = "Home"
 }) => {
-  const navigation = useNavigation(); // ✅ Get navigation object
+  const navigation = useNavigation();
   const route = useRoute();
-  
-  const currentScreen = route.name;
 
-  // ✅ Updated logout function with forced navigation
+  // Enhanced logout function
   const handleLogout = () => {
     Alert.alert(
       'Logout',
@@ -36,15 +36,9 @@ const Header = ({
           style: 'destructive',
           onPress: async () => {
             try {
-              await AuthService.signOut();
+              await signOut(auth);
               console.log('✅ User logged out successfully');
-              
-              // ✅ FORCE NAVIGATION TO LOGIN SCREEN
-              navigation.reset({
-                index: 0,
-                routes: [{ name: 'Login' }], // This targets your AuthNavigator
-              });
-              
+              // Navigation will be handled automatically by AppNavigator
             } catch (error) {
               console.error('❌ Logout error:', error);
               Alert.alert('Error', 'Failed to logout. Please try again.');
@@ -55,38 +49,63 @@ const Header = ({
     );
   };
 
+  // NEW: Navigate to UserProfile
+  const handleProfilePress = () => {
+    navigation.navigate('UserProfile');
+  };
+
+  // NEW: Open drawer menu
+  const handleMenuPress = () => {
+    navigation.openDrawer();
+  };
+
   return (
     <>
       <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
       
       <View style={styles.header}>
         <View style={styles.headerContent}>
-          {/* Logo and Title */}
+          {/* Left side - Menu + Logo */}
           <View style={styles.headerLeft}>
+            <TouchableOpacity 
+              style={styles.headerButton}
+              onPress={handleMenuPress}
+            >
+              <Ionicons name="menu" size={24} color={colors.white} />
+            </TouchableOpacity>
+            
             <Image
-              source={require('../../assets/Strokelogo.png')}
+              source={require('../../assets/logo.png')} // Update path as needed
               style={styles.logoImage}
               resizeMode="contain"
             />
             <Text style={styles.logoText}>{title}</Text>
           </View>
 
-          {/* Navigation Icons */}
+          {/* Right side - Profile + Logout */}
           <View style={styles.headerRight}>
+            {/* NEW: Profile Button */}
+            <TouchableOpacity
+              style={styles.headerButton}
+              onPress={handleProfilePress}
+            >
+              <Ionicons name="person-circle-outline" size={24} color={colors.white} />
+            </TouchableOpacity>
+
             {/* Podcast Button */}
             <TouchableOpacity
               style={styles.headerButton}
               onPress={() => navigation.navigate('Podcast')}
             >
-              <Ionicons name="headset-outline" size={20} color={colors.white} />
+              <Ionicons name="headset-outline" size={24} color={colors.white} />
             </TouchableOpacity>
 
-            {/* ✅ Logout Button with forced navigation */}
+            {/* Logout Button */}
             <TouchableOpacity
               style={styles.logoutButton}
               onPress={handleLogout}
             >
-              <Ionicons name="log-out-outline" size={20} color={colors.white} />
+              <MaterialIcons name="logout" size={20} color={colors.white} />
             </TouchableOpacity>
           </View>
         </View>
@@ -103,7 +122,10 @@ const Header = ({
                 size={16} 
                 color={currentScreen === 'Home' ? colors.primary : colors.white} 
               />
-              <Text style={[styles.tabText, currentScreen === 'Home' && styles.activeTabText]}>
+              <Text style={[
+                styles.tabText, 
+                currentScreen === 'Home' && styles.activeTabText
+              ]}>
                 Home
               </Text>
             </TouchableOpacity>
@@ -113,11 +135,14 @@ const Header = ({
               onPress={() => navigation.navigate('User')}
             >
               <Ionicons 
-                name="person-outline" 
+                name="pulse-outline" 
                 size={16} 
                 color={currentScreen === 'User' ? colors.primary : colors.white} 
               />
-              <Text style={[styles.tabText, currentScreen === 'User' && styles.activeTabText]}>
+              <Text style={[
+                styles.tabText, 
+                currentScreen === 'User' && styles.activeTabText
+              ]}>
                 Dashboard
               </Text>
             </TouchableOpacity>
@@ -126,12 +151,15 @@ const Header = ({
               style={[styles.tab, currentScreen === 'Riskometer' && styles.activeTab]}
               onPress={() => navigation.navigate('Riskometer')}
             >
-              <MaterialIcons 
-                name="psychology" 
+              <Ionicons 
+                name="analytics-outline" 
                 size={16} 
                 color={currentScreen === 'Riskometer' ? colors.primary : colors.white} 
               />
-              <Text style={[styles.tabText, currentScreen === 'Riskometer' && styles.activeTabText]}>
+              <Text style={[
+                styles.tabText, 
+                currentScreen === 'Riskometer' && styles.activeTabText
+              ]}>
                 Risk
               </Text>
             </TouchableOpacity>
@@ -145,7 +173,10 @@ const Header = ({
                 size={16} 
                 color={currentScreen === 'Podcast' ? colors.primary : colors.white} 
               />
-              <Text style={[styles.tabText, currentScreen === 'Podcast' && styles.activeTabText]}>
+              <Text style={[
+                styles.tabText, 
+                currentScreen === 'Podcast' && styles.activeTabText
+              ]}>
                 Podcast
               </Text>
             </TouchableOpacity>
@@ -176,7 +207,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 6,
   },
-  
   headerContent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -184,36 +214,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 12,
   },
-  
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  
   logoImage: {
     width: 64,
     height: 32,
     marginRight: 6,
+    marginLeft: 12,
   },
-  
   logoText: {
     fontSize: 20,
     fontWeight: 'bold',
     color: colors.white,
   },
-  
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
   },
-  
   headerButton: {
     padding: 8,
     borderRadius: 8,
     backgroundColor: 'rgba(255,255,255,0.1)',
   },
-  
   logoutButton: {
     padding: 8,
     borderRadius: 8,
@@ -221,14 +246,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(239, 68, 68, 0.3)',
   },
-  
   tabsContainer: {
     flexDirection: 'row',
     paddingHorizontal: 12,
     paddingVertical: 4,
     gap: 4,
   },
-  
   tab: {
     flex: 1,
     flexDirection: 'row',
@@ -240,17 +263,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.1)',
     gap: 4,
   },
-  
   activeTab: {
     backgroundColor: colors.white,
   },
-  
   tabText: {
     color: colors.white,
     fontSize: 12,
     fontWeight: '500',
   },
-  
   activeTabText: {
     color: colors.primary,
     fontWeight: '600',

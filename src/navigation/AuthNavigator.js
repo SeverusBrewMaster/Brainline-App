@@ -1,20 +1,18 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-// ✅ Fixed import paths - make sure these match your actual file names
+// Import auth screens
 import LoginScreen from '../screens/LoginScreen';
-import SignUpScreen from '../screens/SignupScreen'; // ✅ Changed from SignupScreen to SignUpScreen
+import SignUpScreen from '../screens/SignupScreen';
 import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 
 const Stack = createStackNavigator();
 
 export default function AuthNavigator() {
   return (
-    <Stack.Navigator 
-      initialRouteName="Login"
-      screenOptions={{ 
+    <Stack.Navigator
+      screenOptions={{
         headerShown: false,
-        gestureEnabled: true,
         cardStyleInterpolator: ({ current, layouts }) => ({
           cardStyle: {
             transform: [
@@ -29,23 +27,9 @@ export default function AuthNavigator() {
         }),
       }}
     >
-      <Stack.Screen 
-        name="Login" 
-        component={LoginScreen}
-        options={{ title: 'Login' }}
-      />
-      
-      <Stack.Screen 
-        name="SignUp" 
-        component={SignUpScreen}
-        options={{ title: 'Create Account' }}
-      />
-      
-      <Stack.Screen 
-        name="ForgotPassword" 
-        component={ForgotPasswordScreen}
-        options={{ title: 'Reset Password' }}
-      />
+      <Stack.Screen name="Login" component={LoginScreen} />
+      <Stack.Screen name="SignUp" component={SignUpScreen} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordScreen} />
     </Stack.Navigator>
   );
 }
