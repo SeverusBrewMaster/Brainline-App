@@ -8,7 +8,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   Image,
-<<<<<<< HEAD
   Alert,
   ActivityIndicator,
 } from 'react-native';
@@ -78,30 +77,12 @@ const ForgotPasswordScreen = ({ navigation }) => {
     // Clear error when user starts typing
     if (errors.email) {
       setErrors({ ...errors, email: null });
-=======
-  Alert
-} from 'react-native';
-
-const ForgotPasswordScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-
-  const handleResetPassword = () => {
-    if (email === '') {
-      Alert.alert('Error', 'Please enter your email address.');
-    } else {
-      // You can integrate with Firebase or your backend here
-      console.log('Password reset link sent to:', email);
-      Alert.alert('Success', 'Password reset link has been sent to your email.');
-      setEmail('');
-      navigation.goBack();
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
     }
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-<<<<<<< HEAD
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.content}>
@@ -188,43 +169,10 @@ const ForgotPasswordScreen = ({ navigation }) => {
           🔒 Your account security is our priority
         </Text>
       </View>
-=======
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <Image
-        source={require('../../assets/Strokelogo.png')} // Adjust path if needed
-        style={styles.logo}
-        resizeMode="contain"
-      />
-
-      <Text style={styles.title}>Forgot Password</Text>
-      <Text style={styles.subtitle}>
-        Enter your email address below and we’ll send you a link to reset your password.
-      </Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#aaa"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handleResetPassword}>
-        <Text style={styles.buttonText}>Send Reset Link</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.goBack()}>
-        <Text style={styles.backToLogin}>← Back to Login</Text>
-      </TouchableOpacity>
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
     </KeyboardAvoidingView>
   );
 };
 
-<<<<<<< HEAD
 // Same design system colors from Login/SignUp screens
 const colors = {
   primary: '#2563eb',
@@ -240,14 +188,10 @@ const colors = {
   border: '#e2e8f0',
   shadow: '#000000',
 };
-=======
-export default ForgotPasswordScreen;
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-<<<<<<< HEAD
     backgroundColor: colors.background,
   },
   content: {
@@ -402,61 +346,3 @@ const styles = StyleSheet.create({
 });
 
 export default ForgotPasswordScreen;
-=======
-    backgroundColor: '#ecf0f1',
-    paddingHorizontal: 24,
-    justifyContent: 'center',
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    alignSelf: 'center',
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#2c3e50',
-    textAlign: 'center',
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 15,
-    color: '#555',
-    textAlign: 'center',
-    marginBottom: 30,
-    paddingHorizontal: 10,
-    lineHeight: 20,
-  },
-  input: {
-    height: 50,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 20,
-    fontSize: 16,
-    color: '#333',
-  },
-  button: {
-    backgroundColor: '#3498db',
-    paddingVertical: 15,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginBottom: 20,
-    elevation: 2,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 17,
-    fontWeight: 'bold',
-  },
-  backToLogin: {
-    color: '#3498db',
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: '500',
-  },
-});
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008

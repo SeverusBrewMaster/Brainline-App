@@ -28,11 +28,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     paddingVertical: 15,
     paddingHorizontal: 20,
-<<<<<<< HEAD
     borderRadius: 50,
-=======
-    borderRadius: a50,
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',

@@ -174,6 +174,13 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
             height: profile.physicalInfo.height.toString() 
           }));
         }
+
+        if (profile.physicalInfo.weight) {
+          setPatientVitals(prev => ({ 
+            ...prev, 
+            weight: profile.physicalInfo.weight.toString() 
+          }));
+        }
         
         if (profile.demographics.education) {
           setLifestyle(prev => ({ 

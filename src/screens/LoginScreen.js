@@ -8,7 +8,6 @@ import {
   Image,
   KeyboardAvoidingView,
   Platform,
-<<<<<<< HEAD
   Alert,
   ActivityIndicator,
 } from 'react-native';
@@ -16,14 +15,10 @@ import { Ionicons } from '@expo/vector-icons'; // Better icons for password visi
 
 // Import the AuthService we created
 import { AuthService } from '../services';
-=======
-} from 'react-native';
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-<<<<<<< HEAD
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -223,67 +218,11 @@ const LoginScreen = ({ navigation }) => {
         <Text style={styles.securityText}>
           🔒 Your health data is secure and encrypted
         </Text>
-=======
-
-  const handleLogin = () => {
-    console.log('Email:', email);
-    console.log('Password:', password);
-    navigation.navigate('Main');
-  };
-
-  return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <Image
-        source={require('../../assets/Strokelogo.png')} // Replace with your logo path
-        style={styles.logo}
-        resizeMode="contain"
-      />
-
-      <Text style={styles.title}>Welcome Back</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#aaa"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#aaa"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
-  <Text style={styles.forgot}>Forgot Password?</Text>
-</TouchableOpacity>
-
-
-      <View style={styles.signupContainer}>
-        <Text style={styles.signupText}>Don't have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-          <Text style={styles.signupLink}> Sign Up</Text>
-        </TouchableOpacity>
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
       </View>
     </KeyboardAvoidingView>
   );
 };
 
-<<<<<<< HEAD
 // Design system colors (enhanced)
 const colors = {
   primary: '#2563eb',
@@ -298,14 +237,10 @@ const colors = {
   border: '#e2e8f0',
   shadow: '#000000',
 };
-=======
-export default LoginScreen;
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-<<<<<<< HEAD
     backgroundColor: colors.background,
   },
   content: {
@@ -447,58 +382,10 @@ const styles = StyleSheet.create({
   forgotText: {
     color: colors.primary,
     fontSize: 16,
-=======
-    backgroundColor: '#ecf0f1',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    marginBottom: 20,
-  },
-  title: {
-    fontSize: 26,
-    fontWeight: 'bold',
-    color: '#2c3e50',
-    marginBottom: 30,
-  },
-  input: {
-    width: '100%',
-    backgroundColor: '#fff',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    fontSize: 16,
-    color: '#333',
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#ddd',
-  },
-  button: {
-    width: '100%',
-    backgroundColor: '#3498db',
-    paddingVertical: 14,
-    borderRadius: 12,
-    alignItems: 'center',
-    marginTop: 10,
-    elevation: 3,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  forgot: {
-    marginTop: 12,
-    color: '#3498db',
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
     fontWeight: '500',
   },
   signupContainer: {
     flexDirection: 'row',
-<<<<<<< HEAD
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 32,
@@ -525,15 +412,3 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
-=======
-    marginTop: 24,
-  },
-  signupText: {
-    color: '#555',
-  },
-  signupLink: {
-    color: '#3498db',
-    fontWeight: '600',
-  },
-});
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008

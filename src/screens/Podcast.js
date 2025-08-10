@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -64,27 +63,6 @@ const PodcastScreen = ({ navigation }) => {
     } finally {
       setLoading(false);
       if (isRefresh) setRefreshing(false);
-=======
-
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, TouchableOpacity, StyleSheet, Linking } from 'react-native';
-import axios from 'axios';
-
-const YOUTUBE_API_KEY = 'AIzaSyAdePDcYUZOjEqOCkGdJB2ccvO8hIMv83M'; //Majhi youtube API Key
-const CHANNEL_ID = 'UCFCWIvyEKpUfOgvxSfOm0sw'; // Brainline channel ID
-
-const PodcastScreen = () => {
-  const [videos, setVideos] = useState([]);
-
-  const fetchVideos = async () => {
-    try {
-      const response = await axios.get(
-        `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=10`
-      );
-      setVideos(response.data.items);
-    } catch (error) {
-      console.error('Error fetching YouTube videos:', error);
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
     }
   };
 
@@ -92,7 +70,6 @@ const PodcastScreen = () => {
     fetchVideos();
   }, []);
 
-<<<<<<< HEAD
   const openVideo = (videoId, title) => {
     const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
     
@@ -149,20 +126,10 @@ const PodcastScreen = () => {
   const renderItem = ({ item, index }) => {
     const { videoId } = item.id;
     const { title, thumbnails, publishedAt, description } = item.snippet;
-=======
-  const openVideo = (videoId) => {
-    Linking.openURL(`https://www.youtube.com/watch?v=${videoId}`);
-  };
-
-  const renderItem = ({ item }) => {
-    const { videoId } = item.id;
-    const { title, thumbnails } = item.snippet;
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
 
     if (!videoId) return null;
 
     return (
-<<<<<<< HEAD
       <TouchableOpacity
         onPress={() => openVideo(videoId, title)}
         style={[styles.card, index === 0 && styles.featuredCard]}
@@ -201,16 +168,10 @@ const PodcastScreen = () => {
             </View>
           </View>
         </View>
-=======
-      <TouchableOpacity onPress={() => openVideo(videoId)} style={styles.card}>
-        <Image source={{ uri: thumbnails.medium.url }} style={styles.thumbnail} />
-        <Text style={styles.title}>{title}</Text>
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
       </TouchableOpacity>
     );
   };
 
-<<<<<<< HEAD
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
       <Ionicons name="videocam-outline" size={64} color={colors.textMuted} />
@@ -277,17 +238,10 @@ const PodcastScreen = () => {
         />
       </View>
       
-=======
-  return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Our Podcasts</Text>
-      <Text style={styles.subheading}>A Motive to Brain Stroke Awareness</Text>
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
       <FlatList
         data={videos}
         renderItem={renderItem}
         keyExtractor={(item) => item.id.videoId}
-<<<<<<< HEAD
         ListHeaderComponent={renderHeader}
         ListEmptyComponent={renderEmptyState}
         refreshControl={
@@ -300,15 +254,11 @@ const PodcastScreen = () => {
         }
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
-=======
-        contentContainerStyle={{ paddingBottom: 100 }}
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
       />
     </View>
   );
 };
 
-<<<<<<< HEAD
 // Health app color scheme (consistent with your other components)
 const colors = {
   primary: '#2563eb',
@@ -548,41 +498,6 @@ const styles = StyleSheet.create({
   
   retryButton: {
     minWidth: 120,
-=======
-const styles = StyleSheet.create({
-  container: {
-    padding: 20,
-    flex: 1,
-    backgroundColor: '#f8f9fa',
-  },
-  heading: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 4,
-    color: '#0d6efd',
-  },
-  subheading: {
-    fontSize: 16,
-    marginBottom: 16,
-    color: '#666',
-  },
-  card: {
-    marginBottom: 20,
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    overflow: 'hidden',
-    elevation: 3,
-  },
-  thumbnail: {
-    width: '100%',
-    height: 200,
-  },
-  title: {
-    padding: 10,
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
   },
 });
 

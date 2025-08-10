@@ -2,6 +2,12 @@ import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
+import { View, Text, TouchableOpacity } from 'react-native';
+import { 
+  DrawerContentScrollView, 
+  DrawerItemList, 
+  DrawerItem 
+} from '@react-navigation/drawer';
 
 // Import screens
 import HomeScreen from '../screens/HomeScreen';
@@ -9,7 +15,7 @@ import StrokeRiskAssessmentScreen from '../screens/StrokeRiskAssessmentScreen';
 import HealthDashboard from '../screens/HealthDashboard';
 import BrainStrokeSymptoms from '../screens/BrainStrokeSymptoms';
 import Podcast from '../screens/Podcast';
-import UserProfile from '../screens/UserProfile'; // NEW: Import UserProfile
+import UserProfile from '../screens/UserProfile';
 
 // Import custom header
 import Header from '../components/Header';
@@ -27,12 +33,184 @@ const colors = {
   border: '#e2e8f0',
 };
 
-// Stack Navigator for each main section (to include UserProfile as modal)
+// FIX: Custom Drawer Content Component with Proper Spacing
+function CustomDrawerContent(props) {
+  return (
+    <DrawerContentScrollView {...props} style={{ backgroundColor: colors.background }}>
+      {/* Header Section */}
+      <View style={customDrawerStyles.headerSection}>
+        <Text style={customDrawerStyles.appTitle}>StrokeGuard</Text>
+        <Text style={customDrawerStyles.appSubtitle}>Health Management</Text>
+      </View>
+      
+      {/* Menu Items with Custom Spacing */}
+      <View style={customDrawerStyles.menuSection}>
+        <DrawerItem
+          label="Home"
+          icon={({ color, size, focused }) => (
+            <View style={customDrawerStyles.iconContainer}>
+              <Ionicons 
+                name={focused ? "home" : "home-outline"} 
+                size={20} 
+                color={color} 
+              />
+            </View>
+          )}
+          labelStyle={customDrawerStyles.labelStyle}
+          style={customDrawerStyles.drawerItem}
+          onPress={() => props.navigation.navigate('Home')}
+          focused={props.state.index === 0}
+        />
+        
+        <DrawerItem
+          label="Health Dashboard"
+          icon={({ color, size, focused }) => (
+            <View style={customDrawerStyles.iconContainer}>
+              <Ionicons 
+                name={focused ? "pulse" : "pulse-outline"} 
+                size={20} 
+                color={color} 
+              />
+            </View>
+          )}
+          labelStyle={customDrawerStyles.labelStyle}
+          style={customDrawerStyles.drawerItem}
+          onPress={() => props.navigation.navigate('User')}
+          focused={props.state.index === 1}
+        />
+        
+        <DrawerItem
+          label="Risk Assessment"
+          icon={({ color, size, focused }) => (
+            <View style={customDrawerStyles.iconContainer}>
+              <Ionicons 
+                name={focused ? "analytics" : "analytics-outline"} 
+                size={20} 
+                color={color} 
+              />
+            </View>
+          )}
+          labelStyle={customDrawerStyles.labelStyle}
+          style={customDrawerStyles.drawerItem}
+          onPress={() => props.navigation.navigate('Riskometer')}
+          focused={props.state.index === 2}
+        />
+        
+        <DrawerItem
+          label="Brain Symptoms"
+          icon={({ color, size, focused }) => (
+            <View style={customDrawerStyles.iconContainer}>
+              <MaterialIcons 
+                name="psychology" 
+                size={20} 
+                color={color} 
+              />
+            </View>
+          )}
+          labelStyle={customDrawerStyles.labelStyle}
+          style={customDrawerStyles.drawerItem}
+          onPress={() => props.navigation.navigate('BrainSymptoms')}
+          focused={props.state.index === 3}
+        />
+        
+        <DrawerItem
+          label="Health Podcasts"
+          icon={({ color, size, focused }) => (
+            <View style={customDrawerStyles.iconContainer}>
+              <Ionicons 
+                name={focused ? "headset" : "headset-outline"} 
+                size={20} 
+                color={color} 
+              />
+            </View>
+          )}
+          labelStyle={customDrawerStyles.labelStyle}
+          style={customDrawerStyles.drawerItem}
+          onPress={() => props.navigation.navigate('Podcast')}
+          focused={props.state.index === 4}
+        />
+      </View>
+      
+      {/* User Profile Section */}
+      <View style={customDrawerStyles.profileSection}>
+        <TouchableOpacity 
+          style={customDrawerStyles.profileButton}
+          onPress={() => props.navigation.navigate('UserProfile')}
+        >
+          <Ionicons name="person-circle-outline" size={20} color={colors.primary} />
+          <Text style={customDrawerStyles.profileText}>My Profile</Text>
+        </TouchableOpacity>
+      </View>
+    </DrawerContentScrollView>
+  );
+}
+
+// Custom styles for drawer content
+const customDrawerStyles = {
+  headerSection: {
+    padding: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+    backgroundColor: colors.white,
+    marginBottom: 10,
+  },
+  appTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: colors.primary,
+    marginBottom: 4,
+  },
+  appSubtitle: {
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  menuSection: {
+    paddingVertical: 10,
+  },
+  drawerItem: {
+    marginHorizontal: 8,
+    borderRadius: 8,
+    marginVertical: 2,
+  },
+  iconContainer: {
+    width: 24,
+    alignItems: 'center',
+    marginRight: 12, // FIX: Proper spacing between icon and text
+  },
+  labelStyle: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginLeft: -16, // FIX: Reduce default spacing
+  },
+  profileSection: {
+    marginTop: 20,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: colors.border,
+    paddingHorizontal: 20,
+  },
+  profileButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: `${colors.primary}10`,
+    borderRadius: 8,
+  },
+  profileText: {
+    fontSize: 16,
+    color: colors.primary,
+    fontWeight: '500',
+    marginLeft: 12,
+  },
+};
+
+// Stack Navigator for each main section
 function MainStackNavigator() {
   return (
     <Stack.Navigator
       screenOptions={{
-        headerShown: false, // We'll use custom header
+        headerShown: false,
       }}
     >
       {/* Main Drawer Navigation */}
@@ -59,79 +237,27 @@ function MainStackNavigator() {
   );
 }
 
-// Drawer Screens Component
+// Drawer Screens Component with Custom Content
 function DrawerScreens() {
   return (
     <Drawer.Navigator
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
-        headerShown: false, // We use custom header
+        headerShown: false,
         drawerStyle: {
           backgroundColor: colors.background,
-          width: 280,
+          width: 280, // FIX: Standard width instead of 340
         },
         drawerActiveBackgroundColor: `${colors.primary}15`,
         drawerActiveTintColor: colors.primary,
         drawerInactiveTintColor: colors.textSecondary,
-        drawerLabelStyle: {
-          fontSize: 16,
-          fontWeight: '500',
-          marginLeft: -20,
-        },
       }}
     >
-      <Drawer.Screen
-        name="Home"
-        component={HomeScreenWithHeader}
-        options={{
-          drawerIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      
-      <Drawer.Screen
-        name="User"
-        component={HealthDashboardWithHeader}
-        options={{
-          title: 'Health Dashboard',
-          drawerIcon: ({ color, size }) => (
-            <Ionicons name="pulse-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      
-      <Drawer.Screen
-        name="Riskometer"
-        component={StrokeRiskAssessmentScreenWithHeader}
-        options={{
-          title: 'Risk Assessment',
-          drawerIcon: ({ color, size }) => (
-            <Ionicons name="analytics-outline" size={size} color={color} />
-          ),
-        }}
-      />
-      
-      <Drawer.Screen
-        name="BrainSymptoms"
-        component={BrainStrokeSymptomsWithHeader}
-        options={{
-          title: 'Brain Symptoms',
-          drawerIcon: ({ color, size }) => (
-            <MaterialIcons name="psychology" size={size} color={color} />
-          ),
-        }}
-      />
-      
-      <Drawer.Screen
-        name="Podcast"
-        component={PodcastWithHeader}
-        options={{
-          title: 'Health Podcasts',
-          drawerIcon: ({ color, size }) => (
-            <Ionicons name="headset-outline" size={size} color={color} />
-          ),
-        }}
-      />
+      <Drawer.Screen name="Home" component={HomeScreenWithHeader} />
+      <Drawer.Screen name="User" component={HealthDashboardWithHeader} />
+      <Drawer.Screen name="Riskometer" component={StrokeRiskAssessmentScreenWithHeader} />
+      <Drawer.Screen name="BrainSymptoms" component={BrainStrokeSymptomsWithHeader} />
+      <Drawer.Screen name="Podcast" component={PodcastWithHeader} />
     </Drawer.Navigator>
   );
 }

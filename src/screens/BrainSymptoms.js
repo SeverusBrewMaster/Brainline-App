@@ -1,5 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
 import {
   ScrollView,
   Text,
@@ -408,109 +407,6 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     lineHeight: 20,
     marginLeft: 12,
-=======
-import { ScrollView, Text, View, StyleSheet } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome5';
-
-const BrainStrokeSymptoms = () => {
-  const symptoms = [
-    {
-      title: "Loss of Balance",
-      description: "Difficulty in coordination and frequent stumbling.",
-      icon: "walking",
-    },
-    {
-      title: "Eye Problem",
-      description: "Sudden blurry vision or loss of sight in one or both eyes.",
-      icon: "eye",
-    },
-    {
-      title: "Early Morning Dizziness",
-      description: "Feeling lightheaded or faint right after waking up.",
-      icon: "bed",
-    },
-    {
-      title: "Facial Weakness",
-      description: "One side of the face drooping or difficulty in smiling.",
-      icon: "sad-tear",
-    },
-    {
-      title: "Extreme Fatigue",
-      description: "Unusual tiredness and lack of energy throughout the day.",
-      icon: "battery-empty",
-    },
-    {
-      title: "Arm Weakness",
-      description: "Difficulty in lifting or controlling one arm properly.",
-      icon: "hand-paper",
-    },
-    {
-      title: "Speech Disturbance",
-      description: "Slurred speech or difficulty in forming words.",
-      icon: "microphone-alt-slash",
-    },
-    {
-      title: "Terrible Headache",
-      description: "Severe headache with no known cause, often sudden.",
-      icon: "head-side-virus",
-    },
-    {
-      title: "Lack of Concentration",
-      description: "Difficulty focusing, confusion, or memory loss.",
-      icon: "user-clock",
-    },
-  ];
-
-  return (
-    <ScrollView style={styles.container}>
-      <Text style={styles.header}>Brain Stroke Symptoms</Text>
-      {symptoms.map((symptom, index) => (
-        <View key={index} style={styles.symptomBox}>
-          <Icon name={symptom.icon} size={40} color="#0d6efd" style={styles.icon} />
-          <Text style={styles.symptomTitle}>{symptom.title}</Text>
-          <Text style={styles.symptomDescription}>{symptom.description}</Text>
-        </View>
-      ))}
-    </ScrollView>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8f9fa',
-    padding: 20,
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#0d6efd',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  symptomBox: {
-    backgroundColor: '#fff',
-    padding: 20,
-    borderRadius: 10,
-    marginBottom: 20,
-    elevation: 3,
-  },
-  icon: {
-    marginBottom: 10,
-    alignSelf: 'center',
-  },
-  symptomTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#0d6efd',
-    textAlign: 'center',
-    marginBottom: 5,
-  },
-  symptomDescription: {
-    fontSize: 14,
-    color: '#555',
-    textAlign: 'center',
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
   },
 });
 

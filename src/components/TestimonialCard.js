@@ -1,5 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
 import { 
   View, 
   Text, 
@@ -153,44 +152,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   
-=======
-import { View, Text, Image, StyleSheet } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-
-const TestimonialCard = ({ image, quote, name, role }) => {
-  return (
-    <View style={styles.card}>
-      <Image 
-        source={image} 
-        style={styles.image} 
-      />
-      <FontAwesome name="quote-left" size={24} color="#0d6efd" style={styles.quoteIcon} />
-      <Text style={styles.quote}>{quote}</Text>
-      <Text style={styles.name}>{name}</Text>
-      <Text style={styles.role}>{role}</Text>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: 'white',
-    borderRadius: 15,
-    padding: 20,
-    alignItems: 'center',
-    margin: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 4,
-  },
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
   image: {
     width: 80,
     height: 80,
     borderRadius: 40,
-<<<<<<< HEAD
     backgroundColor: colors.border,
   },
   
@@ -263,30 +228,3 @@ const styles = StyleSheet.create({
 });
 
 export default TestimonialCard;
-=======
-    marginBottom: 15,
-  },
-  quoteIcon: {
-    marginBottom: 10,
-  },
-  quote: {
-    fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 15,
-    fontStyle: 'italic',
-    color: '#555',
-  },
-  name: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  role: {
-    fontSize: 14,
-    color: '#777',
-    textAlign: 'center',
-  },
-});
-
-export default TestimonialCard;
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008

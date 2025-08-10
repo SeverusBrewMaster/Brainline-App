@@ -1,5 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
 import {
   TouchableOpacity,
   Text,
@@ -22,17 +21,10 @@ const Button = ({
   textStyle,
   fullWidth = false
 }) => {
-=======
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-
-const Button = ({ title, onPress, type = 'primary', style, textStyle }) => {
-  // Button types: primary, outline, secondary
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
   return (
     <TouchableOpacity
       style={[
         styles.button,
-<<<<<<< HEAD
         styles[variant],
         styles[size],
         fullWidth && styles.fullWidth,
@@ -84,32 +76,10 @@ const Button = ({ title, onPress, type = 'primary', style, textStyle }) => {
           )}
         </View>
       )}
-=======
-        type === 'primary' && styles.primaryButton,
-        type === 'outline' && styles.outlineButton,
-        type === 'secondary' && styles.secondaryButton,
-        style
-      ]}
-      onPress={onPress}
-      activeOpacity={0.8}
-    >
-      <Text
-        style={[
-          styles.buttonText,
-          type === 'primary' && styles.primaryText,
-          type === 'outline' && styles.outlineText,
-          type === 'secondary' && styles.secondaryText,
-          textStyle
-        ]}
-      >
-        {title}
-      </Text>
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
     </TouchableOpacity>
   );
 };
 
-<<<<<<< HEAD
 // Health app color scheme (consistent with your other components)
 const colors = {
   primary: '#2563eb',
@@ -280,40 +250,3 @@ const styles = StyleSheet.create({
 });
 
 export default Button;
-=======
-const styles = StyleSheet.create({
-  button: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  primaryButton: {
-    backgroundColor: '#0d6efd',
-  },
-  outlineButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#0d6efd',
-  },
-  secondaryButton: {
-    backgroundColor: '#6c757d',
-  },
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  primaryText: {
-    color: 'white',
-  },
-  outlineText: {
-    color: '#0d6efd',
-  },
-  secondaryText: {
-    color: 'white',
-  },
-});
-
-export default Button;
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008

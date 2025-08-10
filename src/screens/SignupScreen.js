@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-<<<<<<< HEAD
 import {
   View,
   Text,
@@ -126,36 +125,11 @@ const SignupScreen = ({ navigation }) => {
     } finally {
       setLoading(false);
     }
-=======
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, KeyboardAvoidingView, Platform } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome'; // Eye icon
-
-const SignUpScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordVisible, setPasswordVisible] = useState(false);
-  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
-
-  const handleSignUp = () => {
-    if (password !== confirmPassword) {
-      alert("Passwords don't match!");
-      return;
-    }
-
-    // Add your sign-up logic here (e.g., Firebase authentication)
-    console.log('Email:', email);
-    console.log('Password:', password);
-    
-    // Navigate to login after successful sign-up
-    navigation.navigate('Login');
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
   };
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-<<<<<<< HEAD
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView 
@@ -307,77 +281,10 @@ const SignUpScreen = ({ navigation }) => {
           🔒 Your health information is encrypted and secure
         </Text>
       </ScrollView>
-=======
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <Image
-        source={require('../../assets/Strokelogo.png')} // Logo image
-        style={styles.logo}
-        resizeMode="contain"
-      />
-
-      <Text style={styles.title}>Create an Account</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        placeholderTextColor="#aaa"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          placeholderTextColor="#aaa"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={!passwordVisible}
-        />
-        <TouchableOpacity
-          style={styles.eyeIconContainer}
-          onPress={() => setPasswordVisible(!passwordVisible)}
-        >
-          <Icon name={passwordVisible ? 'eye-slash' : 'eye'} size={20} color="#3498db" />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.passwordContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Confirm Password"
-          placeholderTextColor="#aaa"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry={!confirmPasswordVisible}
-        />
-        <TouchableOpacity
-          style={styles.eyeIconContainer}
-          onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
-        >
-          <Icon name={confirmPasswordVisible ? 'eye-slash' : 'eye'} size={20} color="#3498db" />
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity style={styles.button} onPress={handleSignUp}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
-
-      <View style={styles.loginContainer}>
-        <Text style={styles.loginText}>Already have an account?</Text>
-        <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-          <Text style={styles.loginLink}> Log In</Text>
-        </TouchableOpacity>
-      </View>
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
     </KeyboardAvoidingView>
   );
 };
 
-<<<<<<< HEAD
 // Same design system colors from Login screen
 const colors = {
   primary: '#2563eb',
@@ -579,80 +486,3 @@ const styles = StyleSheet.create({
 });
 
 export default SignupScreen;
-=======
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ecf0f1',
-    padding: 16,
-  },
-  logo: {
-    width: 120,
-    height: 120,
-    alignSelf: 'center',
-    marginVertical: 20,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 20,
-    color: '#3498db',
-    letterSpacing: 1,
-  },
-  input: {
-    height: 50,
-    backgroundColor: '#f9f9f9',
-    borderRadius: 12,
-    paddingHorizontal: 16,
-    borderColor: '#ddd',
-    borderWidth: 1,
-    marginBottom: 14,
-    fontSize: 16,
-    color: '#333',
-  },
-  passwordContainer: {
-    position: 'relative',
-    marginBottom: 14,
-  },
-  eyeIconContainer: {
-    position: 'absolute',
-    right: 16,
-    top: 10,
-    zIndex: 1,
-  },
-  button: {
-    backgroundColor: '#3498db',
-    paddingVertical: 16,
-    borderRadius: 12,
-    marginTop: 30,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  loginContainer: {
-    marginTop: 20,
-    flexDirection: 'row',
-    justifyContent: 'center',
-  },
-  loginText: {
-    fontSize: 16,
-    color: '#333',
-  },
-  loginLink: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#3498db',
-  },
-});
-
-export default SignUpScreen;
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008

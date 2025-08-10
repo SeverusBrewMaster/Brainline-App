@@ -1,5 +1,4 @@
 import React from 'react';
-<<<<<<< HEAD
 import { 
   View, 
   Text, 
@@ -168,47 +167,3 @@ const styles = StyleSheet.create({
 });
 
 export default SymptomCard;
-=======
-import { View, Text, StyleSheet } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
-
-const SymptomCard = ({ icon, title, description }) => {
-  return (
-    <View style={styles.card}>
-      <FontAwesome5 name={icon} size={24} color="#0d6efd" />
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.description}>{description}</Text>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: 'white',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-    margin: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-    flex: 1,
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginTop: 12,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  description: {
-    fontSize: 14,
-    textAlign: 'center',
-    color: '#666',
-  },
-});
-
-export default SymptomCard;
->>>>>>> 3af4c8bbfd4c76e4139eaf99b6ee9328453f1008
