@@ -14,7 +14,7 @@ import { auth } from '../firebase/config';
 import { signOut } from 'firebase/auth';
 
 const Header = ({
-  title = "StrokeGuard",
+  title = "Brainline",
   showTabs = false, // Disabled tabs as per your request
   currentScreen = "Home"
 }) => {
@@ -66,13 +66,15 @@ const Header = ({
               style={styles.headerButton}
               onPress={handleMenuPress}
             >
-              <Ionicons name="menu" size={24} color={colors.white} />
+              <Ionicons name="menu" size={24} color={colors.primary} />
             </TouchableOpacity>
             
             <Image
               source={require('../../assets/Strokelogo.png')}
               style={styles.logoImage}
-              resizeMode="contain"
+              // resizeMode="contain"
+              size={150}
+              
             />
             <Text style={styles.logoText}>{title}</Text>
           </View>
@@ -83,7 +85,7 @@ const Header = ({
               style={styles.logoutButton}
               onPress={handleLogout}
             >
-              <MaterialIcons name="logout" size={20} color={colors.white} />
+              <MaterialIcons name="logout" size={20} color={colors.primary} />
             </TouchableOpacity>
           </View>
         </View>
@@ -105,7 +107,7 @@ const colors = {
 
 const styles = StyleSheet.create({
   header: {
-    backgroundColor: colors.primary,
+    backgroundColor: "white",
     paddingBottom: 12, // Increased since no tabs below
     shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
@@ -126,15 +128,15 @@ const styles = StyleSheet.create({
     flex: 1, // Take all remaining space
   },
   logoImage: {
-    width: 28,
-    height: 28,
+    width: 70,
+    height: 40,
     marginRight: 8,
     marginLeft: 12,
   },
   logoText: {
-    fontSize: 18,
+    fontSize: 25,
     fontWeight: 'bold',
-    color: colors.white,
+    color: colors.primary,
   },
   headerRight: {
     flexDirection: 'row',

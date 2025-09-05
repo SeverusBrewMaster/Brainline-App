@@ -15,6 +15,8 @@ import { Ionicons } from '@expo/vector-icons'; // Better icons for password visi
 
 // Import the AuthService we created
 import { AuthService } from '../services';
+import { ADMIN_EMAIL } from '../config/constants';
+
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -57,9 +59,9 @@ const LoginScreen = ({ navigation }) => {
         console.log('🚀 Forcing navigation to Main app...');
         navigation.reset({
           index: 0,
-          routes: [{ name: 'Main' }],
+          routes: [{ name: user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? 'Admin' : 'Main' }],
         });
-      }, 500); // Small delay to ensure auth state is updated
+      }, 50); // Small delay to ensure auth state is updated
       
     } catch (error) {
       console.error('❌ Login error:', error);
@@ -114,7 +116,7 @@ const LoginScreen = ({ navigation }) => {
         </View>
 
         {/* Title */}
-        <Text style={styles.title}>Welcome Back</Text>
+        <Text style={styles.title}>Brainline</Text>
         <Text style={styles.subtitle}>Access your health dashboard securely</Text>
 
         {/* Email Input */}

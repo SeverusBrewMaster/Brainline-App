@@ -928,9 +928,9 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
       <View style={styles.questionContainer}>
         <View style={styles.labelWithInfo}>
           <Text style={styles.questionText}>History of TIA (mini-stroke)?</Text>
-          <TouchableOpacity onPress={showTIAInfo} style={styles.infoButton}>
+          {/* <TouchableOpacity onPress={showTIAInfo} style={styles.infoButton}>
             <Ionicons name="information-circle-outline" size={20} color={colors.primary} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <View style={styles.radioRow}>
           {['yes', 'no'].map((option) => (
@@ -1445,13 +1445,19 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+     <View style={[styles.container, { paddingTop: insets.top }]}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
       
-      <Header 
-        title="Stroke Risk Assessment" 
-        showBack={true}
-        onBackPress={() => navigation.goBack()}
-      />
+      {/* Fixed Header with proper spacing */}
+      <View style={styles.headerContainer}>
+        <Header 
+          navigation={navigation} 
+          title="Risk Assessment" 
+          currentScreen="Riskometer"
+        />
+      </View>
+      
+
 
       <View style={styles.headerSection}>
         <Text style={styles.mainTitle}>Comprehensive Stroke Risk Assessment</Text>
@@ -1489,6 +1495,7 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
           iconPosition="right"
         />
       </View>
+    </View>
     </SafeAreaView>
   );
 };

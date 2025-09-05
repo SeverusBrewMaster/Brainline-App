@@ -17,6 +17,7 @@ import LoginScreen from './src/screens/LoginScreen';
 import SignUpScreen from './src/screens/SignupScreen';
 import ForgotPasswordScreen from './src/screens/ForgetPasswordScreen';
 import UserProfile from './src/screens/UserProfile';
+import AdminScreen from './src/screens/AdminScreen';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
@@ -67,7 +68,7 @@ function DrawerNavigator() {
         options={{
           title: 'Home',
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="home-outline" color={color} size={size} />
+            <Ionicons name="home-outline" color={color} size={size} marginRight={8}/>
           ),
         }}
       />
@@ -78,7 +79,7 @@ function DrawerNavigator() {
         options={{
           title: 'Risk Assessment',
           drawerIcon: ({ color, size }) => (
-            <MaterialIcons name="psychology" color={color} size={size} />
+            <MaterialIcons name="psychology" color={color} size={size} marginRight={8} />
           ),
         }}
       />
@@ -89,7 +90,7 @@ function DrawerNavigator() {
         options={{
           title: 'Health Dashboard',
           drawerIcon: ({ color, size }) => (
-            <MaterialIcons name="dashboard" color={color} size={size} />
+            <MaterialIcons name="dashboard" color={color} size={size} marginRight={8}/>
           ),
         }}
       />
@@ -100,7 +101,7 @@ function DrawerNavigator() {
         options={{
           title: 'Health Podcasts',
           drawerIcon: ({ color, size }) => (
-            <Ionicons name="headset-outline" color={color} size={size} />
+            <Ionicons name="headset-outline" color={color} size={size} marginRight={8}/>
           ),
         }}
       />
@@ -139,6 +140,11 @@ export default function App() {
             name="Login" 
             component={LoginScreen}
             options={{ title: 'Login' }}
+          />
+          <Stack.Screen 
+            name="Admin" 
+            component={AdminScreen}
+            options={{ title: 'Admin' }}
           />
           <Stack.Screen 
             name="SignUp" 

@@ -415,15 +415,19 @@ const HealthDashboard = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+      <View style={[styles.container, { paddingTop: insets.top }]}>
+      <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
       
-      <Header 
-        title="Health Dashboard" 
-        showBack={false}
-        rightIcon="refresh"
+      {/* Fixed Header with proper spacing */}
+      <View style={styles.headerContainer}>
+        <Header 
+          navigation={navigation} 
+          title="Health Dashboard" 
+          currentScreen="User"
+          rightIcon="refresh"
         onRightPress={handleRefresh}
-      />
-
+        />
+      </View>
       <ScrollView 
         style={styles.scrollView}
         refreshControl={
@@ -434,6 +438,7 @@ const HealthDashboard = ({ navigation, route }) => {
           />
         }
       >
+        
         {/* Welcome Section with Real User Data */}
         <View style={styles.welcomeCard}>
           <View style={styles.welcomeContent}>
@@ -453,8 +458,9 @@ const HealthDashboard = ({ navigation, route }) => {
                 }
               </Text>
             </View>
+          
             <TouchableOpacity style={styles.editButton}>
-              <Ionicons name="create-outline" size={20} color={colors.textSecondary} 
+              <Ionicons name="person-outline" size={24} color={colors.textSecondary} 
               onPress={() => navigation.navigate('UserProfile')}
               />
             </TouchableOpacity>
@@ -486,7 +492,7 @@ const HealthDashboard = ({ navigation, route }) => {
             {renderTrendChart(riskTrend)}
 
             <TouchableOpacity
-              style={[styles.quickActionCard, { backgroundColor: risk.bgColor }]}
+              style={[styles.quickAssessmentCard, { backgroundColor: risk.bgColor }]}
               onPress={() => navigation.navigate('Riskometer')}
             >
               <Text style={[styles.quickActionText, { color: risk.color }]}>
@@ -507,7 +513,7 @@ const HealthDashboard = ({ navigation, route }) => {
               style={styles.quickActionCard}
               onPress={() => navigation.navigate('Riskometer')}
             >
-              <Ionicons name="analytics-outline" size={24} color={colors.primary} />
+              <Ionicons name="analytics-outline" size={32} color={colors.primary} />
               <Text style={styles.quickActionText}>New Assessment</Text>
             </TouchableOpacity>
 
@@ -515,7 +521,7 @@ const HealthDashboard = ({ navigation, route }) => {
               style={styles.quickActionCard}
               onPress={() => navigation.navigate('BrainSymptoms')}
             >
-              <Ionicons name="pulse-outline" size={24} color={colors.secondary} />
+              <Ionicons name="pulse-outline" size={32} color={colors.secondary} />
               <Text style={styles.quickActionText}>Check Symptoms</Text>
             </TouchableOpacity>
 
@@ -523,7 +529,7 @@ const HealthDashboard = ({ navigation, route }) => {
               style={styles.quickActionCard}
               onPress={() => navigation.navigate('Podcast')}
             >
-              <Ionicons name="headset-outline" size={24} color={colors.warning} />
+              <Ionicons name="headset-outline" size={32} color={colors.warning} />
               <Text style={styles.quickActionText}>Health Podcasts</Text>
             </TouchableOpacity>
 
@@ -534,7 +540,7 @@ const HealthDashboard = ({ navigation, route }) => {
                 { text: 'Call 911', onPress: () => Alert.alert('Calling...') }
               ])}
             >
-              <Ionicons name="warning-outline" size={24} color={colors.error} />
+              <Ionicons name="warning-outline" size={32} color={colors.error} />
               <Text style={styles.quickActionText}>Emergency</Text>
             </TouchableOpacity>
           </View>
@@ -624,6 +630,7 @@ const HealthDashboard = ({ navigation, route }) => {
           />
         </View>
       </ScrollView>
+      </View>
     </SafeAreaView>
   );
 };
@@ -655,12 +662,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   loadingText: {
-    fontSize: 16,
+    fontSize: 22,
     color: colors.textSecondary,
     marginTop: 16,
   },
   errorText: {
-    fontSize: 16,
+    fontSize: 22,
     color: colors.error,
     textAlign: 'center',
     marginBottom: 20,
@@ -692,7 +699,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   avatarText: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.white,
   },
@@ -700,7 +707,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   welcomeTitle: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.textPrimary,
     marginBottom: 4,
@@ -720,7 +727,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     color: colors.textPrimary,
     marginBottom: 12,
@@ -742,20 +749,20 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   riskScoreCircle: {
-    width: 80,
-    height: 80,
+    width: 70,
+    height: 70,
     borderRadius: 40,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 20,
   },
   riskScoreValue: {
-    fontSize: 24,
+    fontSize: 32,
     fontWeight: 'bold',
     color: colors.white,
   },
   riskScoreMax: {
-    fontSize: 12,
+    fontSize: 18,
     color: colors.white,
     marginTop: -4,
   },
@@ -763,7 +770,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   riskCategory: {
-    fontSize: 20,
+    fontSize: 28,
     fontWeight: 'bold',
     marginBottom: 4,
   },
@@ -779,21 +786,21 @@ const styles = StyleSheet.create({
     paddingTop: 16,
   },
   trendTitle: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.textSecondary,
     marginBottom: 12,
   },
   trendChart: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    height: 60,
+    height: 80,
     alignItems: 'flex-end',
   },
   trendBar: {
     flex: 1,
-    marginHorizontal: 4,
+    marginHorizontal: 5,
     alignItems: 'center',
-    height: 50,
+    height: 90,
     justifyContent: 'flex-end',
   },
   trendBarFill: {
@@ -802,7 +809,7 @@ const styles = StyleSheet.create({
     minHeight: 4,
   },
   trendValue: {
-    fontSize: 10,
+    fontSize: 18,
     color: colors.textSecondary,
     marginTop: 4,
   },
@@ -812,7 +819,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   noTrendText: {
-    fontSize: 14,
+    fontSize: 18,
     color: colors.textSecondary,
     fontStyle: 'italic',
   },
@@ -826,7 +833,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   trendLegendText: {
-    fontSize: 10,
+    fontSize: 18,
     color: colors.textSecondary,
     fontStyle: 'italic',
   },
@@ -867,7 +874,7 @@ const styles = StyleSheet.create({
     marginRight: 12,
   },
   assessmentScoreText: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
     color: colors.white,
   },
@@ -875,13 +882,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   assessmentHistoryCategory: {
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '600',
     color: colors.textPrimary,
     marginBottom: 2,
   },
   assessmentHistoryDate: {
-    fontSize: 12,
+    fontSize: 14,
     color: colors.textSecondary,
   },
   viewAssessmentButton: {
@@ -893,7 +900,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   viewAllText: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.primary,
     fontWeight: '500',
   },
@@ -918,10 +925,24 @@ const styles = StyleSheet.create({
     shadowColor: colors.shadow,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  quickAssessmentCard: {
+    backgroundColor: colors.cardBackground,
+    borderRadius: 12,
+    marginTop: 12,
+    padding: 16,
+    alignItems: 'center',
+    flex: 1,
+    minWidth: (width - 60) / 2,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
   quickActionText: {
-    fontSize: 12,
+    fontSize: 16,
     color: colors.textPrimary,
     marginTop: 8,
     textAlign: 'center',
@@ -954,18 +975,18 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   metricTitle: {
-    fontSize: 12,
+    fontSize: 16,
     color: colors.textSecondary,
     marginBottom: 4,
   },
   metricValue: {
-    fontSize: 16,
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.textPrimary,
     marginBottom: 4,
   },
   metricStatus: {
-    fontSize: 10,
+    fontSize: 16,
     fontWeight: '500',
   },
   // Tips Section
@@ -1003,7 +1024,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 4,
   },
   riskFactorItem: {
     flexDirection: 'row',
@@ -1011,7 +1032,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   riskFactorText: {
-    fontSize: 14,
+    fontSize: 18,
     color: colors.textPrimary,
     marginLeft: 12,
     flex: 1,
@@ -1023,7 +1044,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   actionChipText: {
-    fontSize: 12,
+    fontSize: 18,
     color: colors.white,
     fontWeight: '500',
   },

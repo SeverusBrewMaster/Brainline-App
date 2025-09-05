@@ -300,7 +300,7 @@ const styles = StyleSheet.create({
   
   loadingText: {
     marginTop: 16,
-    fontSize: 16,
+    fontSize: 32,
     color: colors.textSecondary,
   },
   
@@ -321,14 +321,14 @@ const styles = StyleSheet.create({
   },
   
   heading: {
-    fontSize: 32,
+    fontSize: 48,
     fontWeight: 'bold',
     color: colors.textPrimary,
     marginBottom: 4,
   },
   
   subheading: {
-    fontSize: 16,
+    fontSize: 20,
     color: colors.textSecondary,
   },
   
@@ -343,19 +343,19 @@ const styles = StyleSheet.create({
   },
   
   statNumber: {
-    fontSize: 24,
+    fontSize: 30,
     fontWeight: 'bold',
     color: colors.primary,
   },
   
   statLabel: {
-    fontSize: 12,
+    fontSize: 18,
     color: colors.textSecondary,
     marginTop: 4,
   },
   
   channelInfo: {
-    fontSize: 14,
+    fontSize: 20,
     color: colors.textSecondary,
     backgroundColor: colors.background,
     paddingVertical: 8,
@@ -424,7 +424,7 @@ const styles = StyleSheet.create({
   
   featuredText: {
     color: colors.white,
-    fontSize: 12,
+    fontSize: 18,
     fontWeight: '600',
     marginLeft: 4,
   },
@@ -442,7 +442,7 @@ const styles = StyleSheet.create({
   },
   
   description: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.textSecondary,
     marginBottom: 12,
     lineHeight: 20,

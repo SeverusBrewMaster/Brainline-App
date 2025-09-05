@@ -145,6 +145,7 @@ const SignupScreen = ({ navigation }) => {
             resizeMode="contain"
           />
         </View>
+        <Text style={styles.apptitle}>Brainline</Text>
 
         {/* Title */}
         <Text style={styles.title}>Create Account</Text>
@@ -332,15 +333,22 @@ const styles = StyleSheet.create({
     width: 240,
     height: 120,
   },
+  apptitle: {
+    fontSize: 38,
+    fontWeight: 'bold',
+    color: colors.textPrimary,
+    textAlign: 'center',
+    marginBottom: 8,
+  },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
     color: colors.textPrimary,
     textAlign: 'center',
     marginBottom: 8,
   },
   subtitle: {
-    fontSize: 16,
+    fontSize: 18,
     color: colors.textSecondary,
     textAlign: 'center',
     marginBottom: 32,
