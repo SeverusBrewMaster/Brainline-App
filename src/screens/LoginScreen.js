@@ -10,22 +10,44 @@ import {
   Platform,
   Alert,
   ActivityIndicator,
+  Modal,
+  FlatList,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Import the AuthService we created
 import { AuthService } from '../services';
 import { ADMIN_EMAIL } from '../config/constants';
 
 const LoginScreen = ({ navigation }) => {
-  const { t } = useTranslation();
-  
+  const { t, i18n } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
+
+  const languages = [
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    { code: 'hi', name: 'हिंदी', flag: '🇮🇳' },
+  ];
+
+  const changeLanguage = async (langCode) => {
+    try {
+      await i18n.changeLanguage(langCode);
+      await AsyncStorage.setItem('language', langCode);
+      setShowLanguageModal(false);
+    } catch (error) {
+      console.error('Error changing language:', error);
+    }
+  };
+
+  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
 
   const validateInputs = () => {
     const newErrors = {};
@@ -106,10 +128,22 @@ const LoginScreen = ({ navigation }) => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.content}>
+        {/* Language Switcher - Top Right */}
+        <View style={styles.languageSwitcherContainer}>
+          <TouchableOpacity 
+            style={styles.languageButton}
+            onPress={() => setShowLanguageModal(true)}
+          >
+            <Text style={styles.languageFlag}>{currentLanguage.flag}</Text>
+            <Text style={styles.languageText}>{currentLanguage.name}</Text>
+            <Ionicons name="chevron-down" size={16} color={colors.textMuted} />
+          </TouchableOpacity>
+        </View>
+
         {/* Logo */}
         <View style={styles.logoContainer}>
           <Image
-            source={require('../assets/logo.png')}
+            source={require('../../assets/Strokelogo.png')}
             style={styles.logo}
             resizeMode="contain"
           />
@@ -221,6 +255,45 @@ const LoginScreen = ({ navigation }) => {
           {t('health_data_secure_encrypted')}
         </Text>
       </View>
+
+      {/* Language Selection Modal */}
+      <Modal
+        visible={showLanguageModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowLanguageModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{t('select_language')}</Text>
+            <FlatList
+              data={languages}
+              keyExtractor={(item) => item.code}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[
+                    styles.languageItem,
+                    i18n.language === item.code && styles.selectedLanguage
+                  ]}
+                  onPress={() => changeLanguage(item.code)}
+                >
+                  <Text style={styles.languageFlag}>{item.flag}</Text>
+                  <Text style={styles.languageName}>{item.name}</Text>
+                  {i18n.language === item.code && (
+                    <Ionicons name="checkmark" size={20} color="#2563eb" />
+                  )}
+                </TouchableOpacity>
+              )}
+            />
+            <TouchableOpacity 
+              style={styles.closeButton}
+              onPress={() => setShowLanguageModal(false)}
+            >
+              <Text style={styles.closeButtonText}>{t('close')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </KeyboardAvoidingView>
   );
 };
@@ -250,6 +323,36 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 24,
     paddingVertical: 20,
+  },
+  languageSwitcherContainer: {
+    position: 'absolute',
+    top: 60,
+    right: 24,
+    zIndex: 1000,
+  },
+  languageButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: colors.cardBackground,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: colors.border,
+    shadowColor: colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  languageFlag: {
+    fontSize: 16,
+    marginRight: 6,
+  },
+  languageText: {
+    fontSize: 14,
+    color: colors.textPrimary,
+    marginRight: 4,
   },
   logoContainer: {
     alignItems: 'center',
@@ -410,6 +513,56 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 24,
     paddingHorizontal: 20,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    padding: 20,
+    width: '80%',
+    maxHeight: '70%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+    color: colors.textPrimary,
+  },
+  languageItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  selectedLanguage: {
+    backgroundColor: '#e0f2fe',
+  },
+  languageName: {
+    fontSize: 16,
+    marginLeft: 12,
+    flex: 1,
+    color: colors.textPrimary,
+  },
+  closeButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  closeButtonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

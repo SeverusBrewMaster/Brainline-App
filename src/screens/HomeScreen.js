@@ -586,7 +586,7 @@ export default function HomeScreen({ navigation }) {
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             <AmbassadorCard
               name="Shankar Mahadevan"
-              image={require('../assets/shankar.jpg')}
+              image={require('../../assets/Shankar.jpg')}
               onPress={() => {
                 Alert.alert(
                   'Shankar Mahadevan',
@@ -597,7 +597,7 @@ export default function HomeScreen({ navigation }) {
             />
             <AmbassadorCard
               name="Supriya Vinod"
-              image={require('../assets/supriya.jpg')}
+              image={require('../../assets/supriya.jpg')}
               onPress={() => {
                 Alert.alert(
                   'Supriya Vinod',

@@ -1,7 +1,7 @@
 {
   "app_title": "[translate:ब्रेनलाइन]",
   "access_dashboard": "[translate:अपने स्वास्थ्य डैशबोर्ड तक सुरक्षित पहुँचें]",
-  "email_address": "[translate:ईमेल पता]",
+  "email_address": "ईमेल पता",
   "password": "[translate:पासवर्ड]",
   "sign_in": "[translate:साइन इन करें]",
   "forgot_password": "[translate:पासवर्ड भूल गए?]",

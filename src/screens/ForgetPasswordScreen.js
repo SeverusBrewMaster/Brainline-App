@@ -11,10 +11,12 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 import { AuthService } from '../services';
 
 const ForgotPasswordScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -24,9 +26,9 @@ const ForgotPasswordScreen = ({ navigation }) => {
     const newErrors = {};
     
     if (!email.trim()) {
-      newErrors.email = 'Email address is required';
+      newErrors.email = t('email_address_required');
     } else if (!/\S+@\S+\.\S+/.test(email.trim())) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = t('please_enter_valid_email_address');
     }
     
     setErrors(newErrors);
@@ -34,43 +36,48 @@ const ForgotPasswordScreen = ({ navigation }) => {
   };
 
   const handleResetPassword = async () => {
-  if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
-    Alert.alert('Invalid Email', 'Please enter a valid email address.');
-    return;
-  }
-  
-  setLoading(true);
-  
-  try {
-    await AuthService.resetPassword(email.trim());
-    
-    Alert.alert(
-      'Password Reset Email Sent',
-      'Check your email for instructions to reset your password.',
-      [
-        { text: 'OK', onPress: () => navigation.goBack() }
-      ]
-    );
-    
-  } catch (error) {
-    console.error('Reset password error:', error);
-    
-    let errorMessage = 'Failed to send reset email. Please try again.';
-    
-    switch (error.code) {
-      case 'auth/user-not-found':
-        errorMessage = 'No account found with this email address.';
-        break;
-      case 'auth/invalid-email':
-        errorMessage = 'Please enter a valid email address.';
-        break;
+    if (!email.trim() || !/\S+@\S+\.\S+/.test(email)) {
+      Alert.alert(t('invalid_email'), t('please_enter_valid_email_address_alert'));
+      return;
     }
-    
-    Alert.alert('Error', errorMessage);
-  } finally {
-    setLoading(false);
-  }
-};
+
+    setLoading(true);
+    try {
+      await AuthService.resetPassword(email.trim());
+      setEmailSent(true);
+      
+      Alert.alert(
+        t('password_reset_email_sent'),
+        t('check_email_reset_instructions'),
+        [
+          { text: t('ok'), onPress: () => navigation.goBack() }
+        ]
+      );
+    } catch (error) {
+      console.error('Reset password error:', error);
+      let errorMessage = t('failed_send_reset_email');
+      
+      switch (error.code) {
+        case 'auth/user-not-found':
+          errorMessage = t('no_account_found_email_address');
+          break;
+        case 'auth/invalid-email':
+          errorMessage = t('please_enter_valid_email_address');
+          break;
+        case 'auth/too-many-requests':
+          errorMessage = t('too_many_reset_attempts');
+          break;
+        default:
+          if (error.message) {
+            errorMessage = error.message;
+          }
+      }
+      
+      Alert.alert(t('error'), errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEmailChange = (text) => {
     setEmail(text);
@@ -81,8 +88,8 @@ const ForgotPasswordScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
+    <KeyboardAvoidingView 
+      style={styles.container} 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.content}>
@@ -96,24 +103,23 @@ const ForgotPasswordScreen = ({ navigation }) => {
         </View>
 
         {/* Title and Description */}
-        <Text style={styles.title}>Forgot Password?</Text>
+        <Text style={styles.title}>{t('forgot_password_question')}</Text>
         <Text style={styles.subtitle}>
-          Don't worry! Enter your email address below and we'll send you a secure link to reset your password.
+          {t('forgot_password_instructions')}
         </Text>
 
         {/* Email Input */}
         <View style={styles.inputContainer}>
           <TextInput
             style={[styles.input, errors.email && styles.inputError]}
-            placeholder="Email address"
+            placeholder={t('email_address')}
             placeholderTextColor={colors.placeholder}
             value={email}
             onChangeText={handleEmailChange}
             keyboardType="email-address"
             autoCapitalize="none"
             autoCorrect={false}
-            textContentType="emailAddress"
-            editable={!loading && !emailSent}
+            editable={!loading}
           />
           {errors.email && (
             <Text style={styles.errorText}>{errors.email}</Text>
@@ -130,10 +136,10 @@ const ForgotPasswordScreen = ({ navigation }) => {
           disabled={loading || emailSent}
         >
           {loading ? (
-            <ActivityIndicator color={colors.white} size="small" />
+            <ActivityIndicator size="small" color={colors.white} />
           ) : (
             <Text style={styles.buttonText}>
-              {emailSent ? 'Reset Link Sent' : 'Send Reset Link'}
+              {emailSent ? t('reset_link_sent') : t('send_reset_link')}
             </Text>
           )}
         </TouchableOpacity>
@@ -143,30 +149,33 @@ const ForgotPasswordScreen = ({ navigation }) => {
           <View style={styles.successContainer}>
             <Text style={styles.successIcon}>✅</Text>
             <Text style={styles.successText}>
-              Check your email for reset instructions
+              {t('check_email_reset_instructions_success')}
             </Text>
           </View>
         )}
 
         {/* Back to Login */}
-        <TouchableOpacity
+        <TouchableOpacity 
           style={styles.backButton}
           onPress={() => navigation.goBack()}
+          disabled={loading}
         >
-          <Text style={styles.backText}>← Back to Sign In</Text>
+          <Text style={[styles.backText, loading && { color: colors.textMuted }]}>
+            {t('back_to_sign_in')}
+          </Text>
         </TouchableOpacity>
 
         {/* Help Section */}
         <View style={styles.helpContainer}>
-          <Text style={styles.helpTitle}>Need Help?</Text>
+          <Text style={styles.helpTitle}>{t('need_help')}</Text>
           <Text style={styles.helpText}>
-            If you don't receive the email within a few minutes, check your spam folder or contact our support team.
+            {t('email_help_instructions')}
           </Text>
         </View>
 
         {/* Security Message */}
         <Text style={styles.securityText}>
-          🔒 Your account security is our priority
+          {t('account_security_priority')}
         </Text>
       </View>
     </KeyboardAvoidingView>

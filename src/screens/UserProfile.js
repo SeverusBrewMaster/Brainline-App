@@ -10,10 +10,14 @@ import {
   Alert,
   TextInput,
   Switch,
-  ActivityIndicator
+  ActivityIndicator,
+  Modal,
+  FlatList,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { Picker } from '@react-native-picker/picker';
+import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { auth } from '../firebase/config';
 import UserService from '../services/UserService';
@@ -21,10 +25,12 @@ import Header from '../components/Header';
 import Button from '../components/Button';
 
 const UserProfile = ({ navigation }) => {
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
   const [dateError, setDateError] = useState('');
+  const [showLanguageModal, setShowLanguageModal] = useState(false);
   
   const [formData, setFormData] = useState({
     // Basic Demographics
@@ -69,6 +75,25 @@ const UserProfile = ({ navigation }) => {
     }
   });
 
+  const languages = [
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'es', name: 'Español', flag: '🇪🇸' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    { code: 'hi', name: 'हिंदी', flag: '🇮🇳' },
+  ];
+
+  const changeLanguage = async (langCode) => {
+    try {
+      await i18n.changeLanguage(langCode);
+      await AsyncStorage.setItem('language', langCode);
+      setShowLanguageModal(false);
+    } catch (error) {
+      console.error('Error changing language:', error);
+    }
+  };
+
+  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+
   useEffect(() => {
     loadUserProfile();
   }, []);
@@ -82,7 +107,6 @@ const UserProfile = ({ navigation }) => {
       }
 
       const profile = await UserService.getUserProfile(currentUser.uid);
-      
       if (profile) {
         setUserProfile(profile);
         
@@ -99,7 +123,7 @@ const UserProfile = ({ navigation }) => {
             console.log('Error parsing existing date:', error);
           }
         }
-        
+
         // Pre-fill form with existing data
         setFormData({
           name: profile.profile?.name || '',
@@ -128,7 +152,7 @@ const UserProfile = ({ navigation }) => {
       }
     } catch (error) {
       console.error('Error loading user profile:', error);
-      Alert.alert('Error', 'Failed to load profile data');
+      Alert.alert(t('error'), t('failed_load_profile_data'));
     } finally {
       setLoading(false);
     }
@@ -137,11 +161,9 @@ const UserProfile = ({ navigation }) => {
   // Date formatting and validation functions
   const formatDateForInput = (date) => {
     if (!date) return '';
-    
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    
     return `${year}-${month}-${day}`;
   };
 
@@ -151,7 +173,7 @@ const UserProfile = ({ navigation }) => {
     if (!regex.test(dateString)) {
       return false;
     }
-    
+
     // Check if it's a valid date
     const date = new Date(dateString);
     const isValid = date instanceof Date && !isNaN(date.getTime());
@@ -169,10 +191,8 @@ const UserProfile = ({ navigation }) => {
 
   const calculateAge = (birthDate) => {
     if (!birthDate) return '';
-    
     const today = new Date();
     const birth = new Date(birthDate);
-    
     let age = today.getFullYear() - birth.getFullYear();
     const monthDiff = today.getMonth() - birth.getMonth();
     
@@ -190,6 +210,7 @@ const UserProfile = ({ navigation }) => {
     if (formattedText.length >= 4) {
       formattedText = formattedText.substring(0, 4) + '-' + formattedText.substring(4);
     }
+    
     if (formattedText.length >= 7) {
       formattedText = formattedText.substring(0, 7) + '-' + formattedText.substring(7, 9);
     }
@@ -211,7 +232,7 @@ const UserProfile = ({ navigation }) => {
         setFormData(prev => ({ ...prev, age: age }));
         setDateError('');
       } else {
-        setDateError('Please enter a valid date');
+        setDateError(t('please_enter_valid_date'));
         setFormData(prev => ({ ...prev, age: '' }));
       }
     } else {
@@ -225,19 +246,19 @@ const UserProfile = ({ navigation }) => {
       const currentUser = auth.currentUser;
       
       if (!currentUser) {
-        Alert.alert('Error', 'Please log in to save your profile');
+        Alert.alert(t('error'), t('please_login_save_profile'));
         return;
       }
 
       // Validate required fields
       if (!formData.name || !formData.gender) {
-        Alert.alert('Error', 'Please fill in all required fields (Name, Gender)');
+        Alert.alert(t('error'), t('please_fill_required_fields_name_gender'));
         return;
       }
 
       // Validate date if provided
       if (formData.dateOfBirth && !validateDate(formData.dateOfBirth)) {
-        Alert.alert('Error', 'Please enter a valid date of birth in YYYY-MM-DD format');
+        Alert.alert(t('error'), t('please_enter_valid_date_format'));
         return;
       }
 
@@ -262,21 +283,20 @@ const UserProfile = ({ navigation }) => {
       };
 
       await UserService.updateUserProfile(currentUser.uid, profileData);
-
+      
       Alert.alert(
-        'Success',
-        'Your profile has been saved successfully!',
+        t('success'),
+        t('profile_saved_successfully'),
         [
           {
-            text: 'Continue',
+            text: t('continue'),
             onPress: () => navigation.goBack()
           }
         ]
       );
-
     } catch (error) {
       console.error('Error saving profile:', error);
-      Alert.alert('Error', 'Failed to save profile. Please try again.');
+      Alert.alert(t('error'), t('failed_save_profile_try_again'));
     } finally {
       setSaving(false);
     }
@@ -300,8 +320,8 @@ const UserProfile = ({ navigation }) => {
         onChangeText={onChangeText}
         placeholder={placeholder}
         keyboardType={keyboardType}
-        autoCapitalize="words"
         maxLength={maxLength}
+        editable={!saving}
       />
     </View>
   );
@@ -316,17 +336,18 @@ const UserProfile = ({ navigation }) => {
         style={[styles.textInput, dateError ? styles.inputError : null]}
         value={value}
         onChangeText={onChangeText}
-        placeholder="YYYY-MM-DD"
+        placeholder={t('date_format_placeholder')}
         keyboardType="numeric"
         maxLength={10}
+        editable={!saving}
       />
       <Text style={styles.helperText}>
-        Enter date in YYYY-MM-DD format (e.g., 1990-01-15)
+        {t('date_format_helper')}
       </Text>
       {dateError ? <Text style={styles.errorText}>{dateError}</Text> : null}
       {value && validateDate(value) && (
         <Text style={styles.successText}>
-          ✓ Age: {formData.age} years
+          ✓ {t('age_calculated', { age: formData.age })}
         </Text>
       )}
     </View>
@@ -340,10 +361,10 @@ const UserProfile = ({ navigation }) => {
       <View style={styles.pickerContainer}>
         <Picker
           selectedValue={selectedValue}
-          onValueChange={onValueChange}
           style={styles.picker}
+          onValueChange={onValueChange}
+          enabled={!saving}
         >
-          <Picker.Item label={`Select ${label}`} value="" />
           {items.map((item) => (
             <Picker.Item key={item.value} label={item.label} value={item.value} />
           ))}
@@ -358,103 +379,137 @@ const UserProfile = ({ navigation }) => {
       <Switch
         value={value}
         onValueChange={(newValue) => {
+          onValueChange(newValue);
           setFormData(prev => ({
             ...prev,
             [section]: {
               ...prev[section],
-              [label.toLowerCase().replace(' ', '')]: newValue
+              [label.toLowerCase().replace(/\s+/g, '').replace(/[()]/g, '')]: newValue
             }
           }));
         }}
         trackColor={{ false: '#767577', true: colors.primary }}
         thumbColor={value ? colors.white : '#f4f3f4'}
+        disabled={saving}
       />
     </View>
   );
 
   if (loading) {
     return (
-      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
-        <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loadingText}>Loading your profile...</Text>
-      </View>
+      <SafeAreaView style={styles.container}>
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color={colors.primary} />
+          <Text style={styles.loadingText}>{t('loading_your_profile')}</Text>
+        </View>
+      </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.primary} />
+      <Header />
       
-      <Header 
-        title="My Profile" 
-        showBack={true}
-        onBackPress={() => navigation.goBack()}
-      />
-
       <ScrollView style={styles.scrollView}>
-        {/* Basic Information */}
-        {renderSectionHeader('Basic Information', 'This information will auto-fill in assessments')}
+        {/* Basic Demographics */}
+        {renderSectionHeader(t('basic_demographics'), t('essential_personal_information'))}
         <View style={styles.card}>
-          {renderTextInput('Full Name', formData.name, 
-            (text) => setFormData(prev => ({ ...prev, name: text })), 
-            'Enter your full name', true)}
+          {renderTextInput(
+            t('full_name'), 
+            formData.name, 
+            (text) => setFormData(prev => ({ ...prev, name: text })),
+            t('enter_full_name_placeholder'),
+            true
+          )}
           
-          {/* Enhanced Date Input */}
-          {renderDateInput('Date of Birth', formData.dateOfBirth, handleDateChange)}
+          {renderDateInput(
+            t('date_of_birth'),
+            formData.dateOfBirth,
+            handleDateChange,
+            false
+          )}
           
-          {/* Age field - now auto-calculated and read-only */}
-          <View style={styles.inputContainer}>
-            <Text style={styles.inputLabel}>Age</Text>
-            <TextInput
-              style={[styles.textInput, styles.readOnlyInput]}
-              value={formData.age}
-              placeholder="Calculated from date of birth"
-              editable={false}
-            />
-            <Text style={styles.helperText}>
-              Age is automatically calculated from your date of birth
-            </Text>
-          </View>
+          {renderTextInput(
+            t('age_years'), 
+            formData.age, 
+            (text) => setFormData(prev => ({ ...prev, age: text })),
+            t('calculated_automatically'),
+            false,
+            'numeric'
+          )}
           
-          {renderPicker('Gender', formData.gender, 
+          {renderPicker(
+            t('gender'),
+            formData.gender,
             (value) => setFormData(prev => ({ ...prev, gender: value })),
             [
-              { label: 'Male', value: 'Male' },
-              { label: 'Female', value: 'Female' },
-              { label: 'Other', value: 'Other' }
-            ], true)}
+              { label: t('select_gender'), value: '' },
+              { label: t('male'), value: 'Male' },
+              { label: t('female'), value: 'Female' },
+              { label: t('prefer_not_to_say'), value: 'Other' }
+            ],
+            true
+          )}
           
-          {renderPicker('Education Level', formData.education, 
+          {renderPicker(
+            t('education_level'),
+            formData.education,
             (value) => setFormData(prev => ({ ...prev, education: value })),
             [
-              { label: 'High School', value: 'High School' },
-              { label: 'Undergraduate', value: 'Undergraduate' },
-              { label: 'Graduate', value: 'Graduate' },
-              { label: 'Post Graduate', value: 'Post Graduate' }
-            ])}
+              { label: t('select_education'), value: '' },
+              { label: t('primary_education'), value: 'Primary' },
+              { label: t('secondary_education'), value: 'Secondary' },
+              { label: t('graduate'), value: 'Graduate' },
+              { label: t('post_graduate'), value: 'Post-graduate' },
+              { label: t('doctorate'), value: 'Doctorate' }
+            ]
+          )}
           
-          {renderTextInput('Profession', formData.profession, 
-            (text) => setFormData(prev => ({ ...prev, profession: text })), 
-            'Your profession/occupation')}
+          {renderTextInput(
+            t('profession'), 
+            formData.profession, 
+            (text) => setFormData(prev => ({ ...prev, profession: text })),
+            t('your_occupation')
+          )}
           
-          {renderTextInput('Phone Number', formData.phoneNumber, 
-            (text) => setFormData(prev => ({ ...prev, phoneNumber: text })), 
-            '+1234567890', false, 'phone-pad')}
+          {renderTextInput(
+            t('phone_number'), 
+            formData.phoneNumber, 
+            (text) => setFormData(prev => ({ ...prev, phoneNumber: text })),
+            t('contact_number'),
+            false,
+            'phone-pad'
+          )}
         </View>
 
         {/* Physical Information */}
-        {renderSectionHeader('Physical Information')}
+        {renderSectionHeader(t('physical_information'), t('body_measurements_health_metrics'))}
         <View style={styles.card}>
-          {renderTextInput('Height (cm)', formData.height, 
-            (text) => setFormData(prev => ({ ...prev, height: text })), 
-            'Height in centimeters', false, 'numeric')}
-          {renderTextInput('Weight (kg)', formData.weight, 
-            (text) => setFormData(prev => ({ ...prev, weight: text })), 
-            'Weight in Kg', false, 'numeric')}
+          {renderTextInput(
+            t('height_cm'), 
+            formData.height, 
+            (text) => setFormData(prev => ({ ...prev, height: text })),
+            t('height_centimeters'),
+            false,
+            'numeric'
+          )}
           
-          {renderPicker('Blood Type', formData.bloodType, 
+          {renderTextInput(
+            t('weight_kg'), 
+            formData.weight, 
+            (text) => setFormData(prev => ({ ...prev, weight: text })),
+            t('weight_kilograms'),
+            false,
+            'numeric'
+          )}
+          
+          {renderPicker(
+            t('blood_type'),
+            formData.bloodType,
             (value) => setFormData(prev => ({ ...prev, bloodType: value })),
             [
+              { label: t('select_blood_type'), value: '' },
               { label: 'A+', value: 'A+' },
               { label: 'A-', value: 'A-' },
               { label: 'B+', value: 'B+' },
@@ -462,73 +517,206 @@ const UserProfile = ({ navigation }) => {
               { label: 'AB+', value: 'AB+' },
               { label: 'AB-', value: 'AB-' },
               { label: 'O+', value: 'O+' },
-              { label: 'O-', value: 'O-' }
-            ])}
+              { label: 'O-', value: 'O-' },
+              { label: t('unknown'), value: 'Unknown' }
+            ]
+          )}
         </View>
 
         {/* Medical History */}
-        {renderSectionHeader('Medical History', 'Check all conditions that apply to you')}
+        {renderSectionHeader(t('medical_history'), t('current_chronic_conditions'))}
         <View style={styles.card}>
-          {renderSwitch('Hypertension', formData.chronicConditions.hypertension, null, 'chronicConditions')}
-          {renderSwitch('Diabetes', formData.chronicConditions.diabetes, null, 'chronicConditions')}
-          {renderSwitch('Heart Disease', formData.chronicConditions.heartDisease, null, 'chronicConditions')}
-          {renderSwitch('Atrial Fibrillation', formData.chronicConditions.atrialFibrillation, null, 'chronicConditions')}
-          {renderSwitch('Thyroid Disease', formData.chronicConditions.thyroidDisease, null, 'chronicConditions')}
-          {renderSwitch('Asthma', formData.chronicConditions.asthma, null, 'chronicConditions')}
-          {renderSwitch('Migraine', formData.chronicConditions.migraine, null, 'chronicConditions')}
+          {renderSwitch(
+            t('hypertension_high_bp'), 
+            formData.chronicConditions.hypertension,
+            (value) => {},
+            'chronicConditions'
+          )}
+          
+          {formData.chronicConditions.hypertension && renderSwitch(
+            t('hypertension_controlled'), 
+            formData.chronicConditions.hypertensionControlled,
+            (value) => {},
+            'chronicConditions'
+          )}
+          
+          {renderSwitch(
+            t('diabetes'), 
+            formData.chronicConditions.diabetes,
+            (value) => {},
+            'chronicConditions'
+          )}
+          
+          {renderSwitch(
+            t('heart_disease'), 
+            formData.chronicConditions.heartDisease,
+            (value) => {},
+            'chronicConditions'
+          )}
+          
+          {renderSwitch(
+            t('atrial_fibrillation'), 
+            formData.chronicConditions.atrialFibrillation,
+            (value) => {},
+            'chronicConditions'
+          )}
+          
+          {renderSwitch(
+            t('thyroid_disease'), 
+            formData.chronicConditions.thyroidDisease,
+            (value) => {},
+            'chronicConditions'
+          )}
+          
+          {renderSwitch(
+            t('asthma'), 
+            formData.chronicConditions.asthma,
+            (value) => {},
+            'chronicConditions'
+          )}
+          
+          {renderSwitch(
+            t('migraine'), 
+            formData.chronicConditions.migraine,
+            (value) => {},
+            'chronicConditions'
+          )}
         </View>
 
         {/* Family History */}
-        {renderSectionHeader('Family History', 'Check if any immediate family members have these conditions')}
+        {renderSectionHeader(t('family_history'), t('family_medical_conditions'))}
         <View style={styles.card}>
-          {renderSwitch('Stroke', formData.familyHistory.stroke, null, 'familyHistory')}
-          {renderSwitch('Heart Disease', formData.familyHistory.heartDisease, null, 'familyHistory')}
-          {renderSwitch('Diabetes', formData.familyHistory.diabetes, null, 'familyHistory')}
-          {renderSwitch('Hypertension', formData.familyHistory.hypertension, null, 'familyHistory')}
+          {renderSwitch(
+            t('family_stroke'), 
+            formData.familyHistory.stroke,
+            (value) => {},
+            'familyHistory'
+          )}
+          
+          {renderSwitch(
+            t('family_heart_disease'), 
+            formData.familyHistory.heartDisease,
+            (value) => {},
+            'familyHistory'
+          )}
+          
+          {renderSwitch(
+            t('family_diabetes'), 
+            formData.familyHistory.diabetes,
+            (value) => {},
+            'familyHistory'
+          )}
+          
+          {renderSwitch(
+            t('family_hypertension'), 
+            formData.familyHistory.hypertension,
+            (value) => {},
+            'familyHistory'
+          )}
         </View>
 
         {/* Emergency Contact */}
-        {renderSectionHeader('Emergency Contact')}
+        {renderSectionHeader(t('emergency_contact'), t('person_contact_emergency'))}
         <View style={styles.card}>
-          {renderTextInput('Contact Name', formData.emergencyContact.name, 
+          {renderTextInput(
+            t('contact_name'), 
+            formData.emergencyContact.name, 
             (text) => setFormData(prev => ({ 
               ...prev, 
               emergencyContact: { ...prev.emergencyContact, name: text }
-            })), 
-            'Emergency contact name')}
-          
-          {renderPicker('Relationship', formData.emergencyContact.relationship, 
-            (value) => setFormData(prev => ({ 
-              ...prev, 
-              emergencyContact: { ...prev.emergencyContact, relationship: value }
             })),
-            [
-              { label: 'Spouse', value: 'Spouse' },
-              { label: 'Parent', value: 'Parent' },
-              { label: 'Child', value: 'Child' },
-              { label: 'Sibling', value: 'Sibling' },
-              { label: 'Friend', value: 'Friend' },
-              { label: 'Other', value: 'Other' }
-            ])}
+            t('emergency_contact_full_name')
+          )}
           
-          {renderTextInput('Phone Number', formData.emergencyContact.phone, 
+          {renderTextInput(
+            t('relationship'), 
+            formData.emergencyContact.relationship, 
+            (text) => setFormData(prev => ({ 
+              ...prev, 
+              emergencyContact: { ...prev.emergencyContact, relationship: text }
+            })),
+            t('relationship_to_contact')
+          )}
+          
+          {renderTextInput(
+            t('emergency_phone'), 
+            formData.emergencyContact.phone, 
             (text) => setFormData(prev => ({ 
               ...prev, 
               emergencyContact: { ...prev.emergencyContact, phone: text }
-            })), 
-            '+1234567890', false, 'phone-pad')}
+            })),
+            t('emergency_contact_phone_number'),
+            false,
+            'phone-pad'
+          )}
         </View>
 
-        {/* Save Button */}
+        {/* App Preferences - Language Selection */}
+        {renderSectionHeader(t('app_preferences'), t('customize_app_experience'))}
+        <View style={styles.card}>
+          <View style={styles.inputContainer}>
+            <Text style={styles.inputLabel}>{t('app_language')}</Text>
+            <TouchableOpacity 
+              style={styles.languageSelector}
+              onPress={() => setShowLanguageModal(true)}
+            >
+              <View style={styles.languageSelectorContent}>
+                <Text style={styles.languageFlag}>{currentLanguage.flag}</Text>
+                <Text style={styles.languageSelectorText}>{currentLanguage.name}</Text>
+              </View>
+              <Ionicons name="chevron-down" size={20} color={colors.textMuted} />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={styles.buttonContainer}>
           <Button
-            title={saving ? "Saving..." : "Save Profile"}
+            title={saving ? t('saving_profile') : t('save_profile')}
             onPress={handleSave}
             disabled={saving}
             style={styles.saveButton}
           />
         </View>
       </ScrollView>
+
+      {/* Language Selection Modal */}
+      <Modal
+        visible={showLanguageModal}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setShowLanguageModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{t('select_language')}</Text>
+            <FlatList
+              data={languages}
+              keyExtractor={(item) => item.code}
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={[
+                    styles.languageItem,
+                    i18n.language === item.code && styles.selectedLanguage
+                  ]}
+                  onPress={() => changeLanguage(item.code)}
+                >
+                  <Text style={styles.languageFlag}>{item.flag}</Text>
+                  <Text style={styles.languageName}>{item.name}</Text>
+                  {i18n.language === item.code && (
+                    <Ionicons name="checkmark" size={20} color="#2563eb" />
+                  )}
+                </TouchableOpacity>
+              )}
+            />
+            <TouchableOpacity 
+              style={styles.closeButton}
+              onPress={() => setShowLanguageModal(false)}
+            >
+              <Text style={styles.closeButtonText}>{t('close')}</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 };
@@ -546,6 +734,7 @@ const colors = {
   white: '#ffffff',
   border: '#e2e8f0',
   required: '#ef4444',
+  textMuted: '#94a3b8',
 };
 
 const styles = StyleSheet.create({
@@ -660,6 +849,80 @@ const styles = StyleSheet.create({
   },
   saveButton: {
     backgroundColor: colors.primary,
+  },
+  // Language selector styles
+  languageSelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    backgroundColor: colors.white,
+  },
+  languageSelectorContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  languageFlag: {
+    fontSize: 18,
+    marginRight: 12,
+  },
+  languageSelectorText: {
+    fontSize: 16,
+    color: colors.textPrimary,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 16,
+    padding: 20,
+    width: '80%',
+    maxHeight: '70%',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginBottom: 20,
+    color: colors.textPrimary,
+  },
+  languageItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginBottom: 8,
+  },
+  selectedLanguage: {
+    backgroundColor: '#e0f2fe',
+  },
+  languageName: {
+    fontSize: 16,
+    marginLeft: 12,
+    flex: 1,
+    color: colors.textPrimary,
+  },
+  closeButton: {
+    backgroundColor: colors.primary,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 16,
+  },
+  closeButtonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
 

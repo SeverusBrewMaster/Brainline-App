@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 import HealthAssessmentService from '../services/HealthAssessmentService';
 import { auth } from '../firebase/config';
@@ -27,6 +28,7 @@ import Button from '../components/Button';
 
 // Optimized TextInput component for better performance
 const OptimizedTextInput = React.memo(({ value, onChangeText, style, placeholder, keyboardType, editable = true, ...props }) => {
+  const { t } = useTranslation();
   const [localValue, setLocalValue] = useState(value || '');
   const timeoutRef = useRef();
 
@@ -40,6 +42,7 @@ const OptimizedTextInput = React.memo(({ value, onChangeText, style, placeholder
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
+
     timeoutRef.current = setTimeout(() => {
       onChangeText(text);
     }, 300);
@@ -47,18 +50,19 @@ const OptimizedTextInput = React.memo(({ value, onChangeText, style, placeholder
 
   return (
     <TextInput
-      {...props}
       style={style}
+      placeholder={placeholder}
       value={localValue}
       onChangeText={handleChangeText}
-      placeholder={placeholder}
       keyboardType={keyboardType}
       editable={editable}
+      {...props}
     />
   );
 });
 
 const StrokeRiskAssessmentScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
 
   // Patient vitals
@@ -152,75 +156,74 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
       if (!currentUser) return;
 
       const profile = await UserService.getProfileForAssessment(currentUser.uid);
-      
       if (profile && profile.profileCompleted) {
         setProfileData(profile);
         
         // Pre-fill form data from profile
         if (profile.demographics.age) {
-          setPatientVitals(prev => ({ 
-            ...prev, 
-            age: profile.demographics.age.toString() 
+          setPatientVitals(prev => ({
+            ...prev,
+            age: profile.demographics.age.toString()
           }));
         }
-        
+
         if (profile.demographics.gender) {
           setGender(profile.demographics.gender);
         }
-        
+
         if (profile.physicalInfo.height) {
-          setPatientVitals(prev => ({ 
-            ...prev, 
-            height: profile.physicalInfo.height.toString() 
+          setPatientVitals(prev => ({
+            ...prev,
+            height: profile.physicalInfo.height.toString()
           }));
         }
 
         if (profile.physicalInfo.weight) {
-          setPatientVitals(prev => ({ 
-            ...prev, 
-            weight: profile.physicalInfo.weight.toString() 
+          setPatientVitals(prev => ({
+            ...prev,
+            weight: profile.physicalInfo.weight.toString()
           }));
         }
-        
+
         if (profile.demographics.education) {
-          setLifestyle(prev => ({ 
-            ...prev, 
-            education: profile.demographics.education 
+          setLifestyle(prev => ({
+            ...prev,
+            education: profile.demographics.education
           }));
         }
-        
+
         if (profile.demographics.profession) {
-          setLifestyle(prev => ({ 
-            ...prev, 
-            profession: profile.demographics.profession 
+          setLifestyle(prev => ({
+            ...prev,
+            profession: profile.demographics.profession
           }));
         }
-        
+
         // Pre-fill medical history
         if (profile.medicalHistory.hypertension !== undefined) {
-          setMedicalHistory(prev => ({ 
-            ...prev, 
-            hypertension: profile.medicalHistory.hypertension ? 'yes' : 'no' 
+          setMedicalHistory(prev => ({
+            ...prev,
+            hypertension: profile.medicalHistory.hypertension ? 'yes' : 'no'
           }));
         }
-        
+
         if (profile.medicalHistory.diabetes !== undefined) {
-          setMedicalHistory(prev => ({ 
-            ...prev, 
-            diabetes: profile.medicalHistory.diabetes ? 'yes' : 'no' 
+          setMedicalHistory(prev => ({
+            ...prev,
+            diabetes: profile.medicalHistory.diabetes ? 'yes' : 'no'
           }));
         }
-        
+
         if (profile.familyHistory.stroke !== undefined) {
-          setMedicalHistory(prev => ({ 
-            ...prev, 
-            familyHistory: profile.familyHistory.stroke ? 'yes' : 'no' 
+          setMedicalHistory(prev => ({
+            ...prev,
+            familyHistory: profile.familyHistory.stroke ? 'yes' : 'no'
           }));
         }
-        
+
         console.log('✅ Profile data loaded and form pre-filled');
       }
-      
+
       setIsProfileLoaded(true);
     } catch (error) {
       console.error('Error loading user profile for assessment:', error);
@@ -231,15 +234,13 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
   // Pre-filled indicator component
   const PreFilledIndicator = ({ isPreFilled, children }) => (
     <View style={styles.inputContainer}>
-      <View style={styles.inputHeader}>
-        {children}
-        {isPreFilled && (
-          <View style={styles.preFilledBadge}>
-            <Ionicons name="checkmark-circle" size={16} color={colors.success} />
-            <Text style={styles.preFilledText}>From Profile</Text>
-          </View>
-        )}
-      </View>
+      {children}
+      {isPreFilled && (
+        <View style={styles.preFilledBadge}>
+          <Ionicons name="checkmark-circle" size={12} color={colors.success} />
+          <Text style={styles.preFilledText}>{t('from_profile')}</Text>
+        </View>
+      )}
     </View>
   );
 
@@ -249,17 +250,17 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
       return (
         <View style={styles.profilePrompt}>
           <View style={styles.promptCard}>
-            <Ionicons name="person-outline" size={24} color={colors.primary} />
+            <Ionicons name="person-circle" size={24} color={colors.primary} />
             <View style={styles.promptContent}>
-              <Text style={styles.promptTitle}>Complete Your Profile</Text>
+              <Text style={styles.promptTitle}>{t('complete_your_profile')}</Text>
               <Text style={styles.promptText}>
-                Save time on future assessments by completing your profile first
+                {t('save_time_future_assessments')}
               </Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.promptButton}
                 onPress={() => navigation.navigate('UserProfile')}
               >
-                <Text style={styles.promptButtonText}>Complete Profile</Text>
+                <Text style={styles.promptButtonText}>{t('complete_profile')}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -271,16 +272,16 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
 
   // Symptom options
   const symptomOptions = [
-    'Sudden numbness or weakness',
-    'Confusion or trouble speaking',
-    'Vision problems',
-    'Severe headache',
-    'Dizziness or loss of balance',
-    'Facial drooping',
-    'Arm weakness',
-    'Speech difficulty',
-    'Memory problems',
-    'Walking difficulties'
+    t('sudden_numbness_weakness'),
+    t('confusion_trouble_speaking'),
+    t('vision_problems'),
+    t('severe_headache'),
+    t('dizziness_loss_balance'),
+    t('facial_drooping'),
+    t('arm_weakness'),
+    t('speech_difficulty'),
+    t('memory_problems'),
+    t('walking_difficulties')
   ];
 
   // Calculate BMI with memoization
@@ -296,9 +297,8 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
   // Updated risk calculation
   const calculateRiskScore = useCallback(() => {
     let score = 0;
-    
     console.log('🔍 Starting risk calculation...');
-    
+
     // Parse numeric values
     const ageNum = parseInt(patientVitals.age) || 0;
     const sleepNum = parseInt(additionalFactors.sleepHours) || 8;
@@ -395,17 +395,17 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
     let urgentReferral = false;
 
     if (score <= 5) {
-      category = 'Low';
-      recommendationText = 'You are a healthy individual. Maintain your current lifestyle with regular check-ups and preventive care.';
-      rescreenInterval = 'Re-screen after 12 months';
+      category = t('low');
+      recommendationText = t('low_risk_recommendation');
+      rescreenInterval = t('rescreen_12_months');
     } else if (score >= 6 && score <= 12) {
-      category = 'Moderate';
-      recommendationText = 'Moderate risk detected. Consider dietary modifications, regular exercise, stress management, and follow-up with your physician for lifestyle counselling.';
-      rescreenInterval = 'Lifestyle counselling recommended, re-check in 6 months';
+      category = t('moderate');
+      recommendationText = t('moderate_risk_recommendation');
+      rescreenInterval = t('lifestyle_counseling_6_months');
     } else {
-      category = 'High';
-      recommendationText = 'High risk detected. Immediate consultation with a healthcare provider is strongly recommended for comprehensive evaluation and management.';
-      rescreenInterval = 'Urgent referral to partner hospital';
+      category = t('high');
+      recommendationText = t('high_risk_recommendation');
+      rescreenInterval = t('urgent_referral_partner_hospital');
       urgentReferral = true;
     }
 
@@ -420,7 +420,7 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
       rescreenInterval,
       urgentReferral
     };
-  }, [patientVitals, lifestyle, medicalHistory, additionalFactors]);
+  }, [patientVitals, lifestyle, medicalHistory, additionalFactors, t]);
 
   const toggleSymptom = useCallback((symptom) => {
     setSymptoms(prev =>
@@ -434,13 +434,13 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
     switch (currentStep) {
       case 1:
         if (!patientVitals.age || !gender) {
-          Alert.alert('Validation Error', 'Please enter your age and gender.');
+          Alert.alert(t('validation_error'), t('please_enter_age_gender'));
           return false;
         }
         return true;
       case 2:
         if (!patientVitals.bloodPressure || !patientVitals.weight || !patientVitals.height) {
-          Alert.alert('Validation Error', 'Please enter blood pressure, weight, and height.');
+          Alert.alert(t('validation_error'), t('please_enter_bp_weight_height'));
           return false;
         }
         return true;
@@ -470,9 +470,8 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
     try {
       setLoading(true);
       const currentUser = auth.currentUser;
-      
       if (!currentUser) {
-        Alert.alert('Error', 'Please log in to save your assessment.');
+        Alert.alert(t('error'), t('please_login_save_assessment'));
         return;
       }
 
@@ -483,7 +482,7 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
       // Validate results
       if (!assessmentResults || typeof assessmentResults.riskScore !== 'number') {
         console.error('❌ Invalid assessment results:', assessmentResults);
-        Alert.alert('Error', 'Unable to calculate risk score. Please check all fields.');
+        Alert.alert(t('error'), t('unable_calculate_risk_score'));
         return;
       }
 
@@ -532,7 +531,7 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
         results: {
           riskScore: assessmentResults.riskScore,
           riskCategory: assessmentResults.riskCategory,
-          recommendations: assessmentResults.recommendations || 'Follow up with healthcare provider',
+          recommendations: assessmentResults.recommendations || t('follow_up_healthcare_provider'),
           rescreenInterval: assessmentResults.rescreenInterval,
           urgentReferral: assessmentResults.urgentReferral
         },
@@ -540,7 +539,7 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
           hasSymptoms: symptoms.length > 0,
           activeSymptoms: symptoms,
           symptomSeverity: symptoms.length > 3 ? 'severe' :
-                          symptoms.length > 1 ? 'moderate' : 'mild'
+            symptoms.length > 1 ? 'moderate' : 'mild'
         }
       };
 
@@ -561,23 +560,26 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
 
       // Success alert with navigation back to dashboard
       Alert.alert(
-        '✅ Assessment Complete',
-        `Your risk assessment has been saved.\nRisk Score: ${assessmentResults.riskScore}\nRisk Level: ${assessmentResults.riskCategory}`,
+        t('assessment_complete'),
+        t('assessment_saved_details', {
+          riskScore: assessmentResults.riskScore,
+          riskLevel: assessmentResults.riskCategory
+        }),
         [
-          { 
-            text: 'View Dashboard', 
+          {
+            text: t('view_dashboard'),
             onPress: () => {
               // Navigate back and trigger refresh
               navigation.navigate('User', { refresh: true });
             }
           },
-          { text: 'OK', style: 'default' }
+          { text: t('ok'), style: 'default' }
         ]
       );
 
     } catch (error) {
       console.error('❌ Error in handleSubmit:', error);
-      Alert.alert('Error', 'Failed to save assessment. Please try again.');
+      Alert.alert(t('error'), t('failed_save_assessment'));
     } finally {
       setLoading(false);
     }
@@ -591,221 +593,221 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
           key={index}
           style={[
             styles.stepDot,
-            currentStep === index + 1 ? styles.stepDotActive : styles.stepDotInactive
+            index < currentStep ? styles.stepDotActive : styles.stepDotInactive,
           ]}
         />
       ))}
-      <Text style={styles.stepText}>Step {currentStep} of {totalSteps}</Text>
+      <Text style={styles.stepText}>{t('step_of', { current: currentStep, total: totalSteps })}</Text>
     </View>
   );
 
   // Render basic info step with pre-filling
   const renderBasicInfo = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>Basic Information</Text>
-      <Text style={styles.stepSubtitle}>Personal details and demographics</Text>
-
+      <Text style={styles.stepTitle}>{t('basic_information')}</Text>
+      <Text style={styles.stepSubtitle}>{t('personal_details_demographics')}</Text>
+      
       <PreFilledIndicator isPreFilled={profileData?.demographics?.age}>
-        <Text style={styles.label}>Age *</Text>
-        <TextInput
-          style={[
-            styles.textInput,
-            profileData?.demographics?.age && styles.preFilledInput
-          ]}
+        <Text style={styles.label}>{t('age')} *</Text>
+        <OptimizedTextInput
+          style={styles.textInput}
           value={patientVitals.age}
           onChangeText={(text) => setPatientVitals(prev => ({ ...prev, age: text }))}
-          placeholder="Enter your age"
+          placeholder={t('enter_your_age')}
           keyboardType="numeric"
         />
       </PreFilledIndicator>
 
-      <PreFilledIndicator isPreFilled={profileData?.demographics?.gender}>
-        <Text style={styles.label}>Gender *</Text>
+      <View style={styles.questionContainer}>
+        <Text style={styles.questionText}>{t('gender')} *</Text>
         <View style={styles.radioGroup}>
-          {['Male', 'Female'].map((option) => (
+          {[
+            { key: 'Male', label: t('male') },
+            { key: 'Female', label: t('female') }
+          ].map((option) => (
             <TouchableOpacity
-              key={option}
+              key={option.key}
               style={[
                 styles.radioOption,
-                gender === option && styles.radioOptionSelected
+                gender === option.key && styles.radioOptionSelected,
               ]}
-              onPress={() => setGender(option)}
+              onPress={() => setGender(option.key)}
             >
               <Text style={[
                 styles.radioText,
-                gender === option && styles.radioTextSelected
+                gender === option.key && styles.radioTextSelected,
               ]}>
-                {option}
+                {option.label}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
-      </PreFilledIndicator>
+      </View>
 
-      <PreFilledIndicator isPreFilled={profileData?.demographics?.education}>
-        <Text style={styles.label}>Education Level</Text>
+      <View style={styles.questionContainer}>
+        <Text style={styles.questionText}>{t('education_level')}</Text>
         <View style={styles.radioGroup}>
-          {['Primary', 'Secondary', 'Graduate', 'Post-graduate'].map((level) => (
+          {[
+            { key: 'Primary', label: t('primary') },
+            { key: 'Secondary', label: t('secondary') },
+            { key: 'Graduate', label: t('graduate') },
+            { key: 'Post-graduate', label: t('post_graduate') }
+          ].map((level) => (
             <TouchableOpacity
-              key={level}
+              key={level.key}
               style={[
                 styles.radioOption,
-                lifestyle.education === level && styles.radioOptionSelected
+                lifestyle.education === level.key && styles.radioOptionSelected,
               ]}
-              onPress={() => setLifestyle(prev => ({ ...prev, education: level }))}
+              onPress={() => setLifestyle(prev => ({ ...prev, education: level.key }))}
             >
               <Text style={[
                 styles.radioText,
-                lifestyle.education === level && styles.radioTextSelected
+                lifestyle.education === level.key && styles.radioTextSelected,
               ]}>
-                {level}
+                {level.label}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
-      </PreFilledIndicator>
+      </View>
 
-      <PreFilledIndicator isPreFilled={profileData?.demographics?.profession}>
-        <Text style={styles.label}>Profession</Text>
-        <TextInput
-          style={[
-            styles.textInput,
-            profileData?.demographics?.profession && styles.preFilledInput
-          ]}
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>{t('profession')}</Text>
+        <OptimizedTextInput
+          style={styles.textInput}
           value={lifestyle.profession}
           onChangeText={(text) => setLifestyle(prev => ({ ...prev, profession: text }))}
-          placeholder="Your profession"
+          placeholder={t('your_profession')}
         />
-      </PreFilledIndicator>
+      </View>
     </View>
   );
 
   const renderVitals = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>Vital Parameters</Text>
-      <Text style={styles.stepSubtitle}>Physical measurements and lab values</Text>
-
+      <Text style={styles.stepTitle}>{t('vital_parameters')}</Text>
+      <Text style={styles.stepSubtitle}>{t('physical_measurements_lab_values')}</Text>
+      
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Blood Pressure (mmHg) *</Text>
+        <Text style={styles.label}>{t('blood_pressure_mmhg')} *</Text>
         <OptimizedTextInput
           style={styles.textInput}
-          placeholder="e.g., 120/80"
           value={patientVitals.bloodPressure}
           onChangeText={(text) => setPatientVitals(prev => ({ ...prev, bloodPressure: text }))}
+          placeholder={t('systolic_diastolic')}
         />
       </View>
 
-      {/* Weight and Height inputs */}
       <View style={styles.inputRow}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Weight (kg) *</Text>
+        <PreFilledIndicator isPreFilled={profileData?.physicalInfo?.weight}>
+          <Text style={styles.label}>{t('weight_kg')} *</Text>
           <OptimizedTextInput
             style={styles.numberInput}
-            placeholder="e.g., 70"
             value={patientVitals.weight}
             onChangeText={(text) => setPatientVitals(prev => ({ ...prev, weight: text }))}
             keyboardType="numeric"
+            placeholder={t('weight')}
           />
-        </View>
+        </PreFilledIndicator>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Height (cm) *</Text>
+        <PreFilledIndicator isPreFilled={profileData?.physicalInfo?.height}>
+          <Text style={styles.label}>{t('height_cm')} *</Text>
           <OptimizedTextInput
             style={styles.numberInput}
-            placeholder="e.g., 170"
             value={patientVitals.height}
             onChangeText={(text) => setPatientVitals(prev => ({ ...prev, height: text }))}
             keyboardType="numeric"
+            placeholder={t('height')}
           />
-        </View>
+        </PreFilledIndicator>
       </View>
 
       {/* Auto-calculated BMI display */}
       {patientVitals.weight && patientVitals.height && (
         <View style={styles.bmiDisplay}>
-          <Text style={styles.bmiLabel}>Calculated BMI:</Text>
+          <Text style={styles.bmiLabel}>{t('calculated_bmi')}:</Text>
           <Text style={styles.bmiValue}>{calculateBMI()}</Text>
           <Text style={styles.bmiCategory}>
             {(() => {
               const bmi = parseFloat(calculateBMI());
-              if (bmi < 18.5) return '(Underweight)';
-              if (bmi < 25) return '(Normal)';
-              if (bmi < 30) return '(Overweight)';
-              return '(Obese)';
+              if (bmi < 18.5) return t('underweight');
+              if (bmi < 25) return t('normal');
+              if (bmi < 30) return t('overweight');
+              return t('obese');
             })()}
           </Text>
         </View>
       )}
 
-      <View style={styles.inputRow}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Total Cholesterol</Text>
-          <OptimizedTextInput
-            style={styles.numberInput}
-            placeholder="mg/dL"
-            value={patientVitals.cholesterol}
-            onChangeText={(text) => setPatientVitals(prev => ({ ...prev, cholesterol: text }))}
-            keyboardType="numeric"
-          />
-        </View>
-
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>LDL Cholesterol</Text>
-          <OptimizedTextInput
-            style={styles.numberInput}
-            placeholder="mg/dL"
-            value={patientVitals.ldl}
-            onChangeText={(text) => setPatientVitals(prev => ({ ...prev, ldl: text }))}
-            keyboardType="numeric"
-          />
-        </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>{t('total_cholesterol')}</Text>
+        <OptimizedTextInput
+          style={styles.numberInput}
+          value={patientVitals.cholesterol}
+          onChangeText={(text) => setPatientVitals(prev => ({ ...prev, cholesterol: text }))}
+          keyboardType="numeric"
+          placeholder={t('mg_dl')}
+        />
       </View>
 
-      <View style={styles.inputRow}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>HDL Cholesterol</Text>
-          <OptimizedTextInput
-            style={styles.numberInput}
-            placeholder="mg/dL"
-            value={patientVitals.hdl}
-            onChangeText={(text) => setPatientVitals(prev => ({ ...prev, hdl: text }))}
-            keyboardType="numeric"
-          />
-        </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>{t('ldl_cholesterol')}</Text>
+        <OptimizedTextInput
+          style={styles.numberInput}
+          value={patientVitals.ldl}
+          onChangeText={(text) => setPatientVitals(prev => ({ ...prev, ldl: text }))}
+          keyboardType="numeric"
+          placeholder={t('mg_dl')}
+        />
+      </View>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>HbA1c (%)</Text>
-          <OptimizedTextInput
-            style={styles.numberInput}
-            placeholder="e.g., 6.5"
-            value={patientVitals.hba1c}
-            onChangeText={(text) => setPatientVitals(prev => ({ ...prev, hba1c: text }))}
-            keyboardType="numeric"
-          />
-        </View>
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>{t('hdl_cholesterol')}</Text>
+        <OptimizedTextInput
+          style={styles.numberInput}
+          value={patientVitals.hdl}
+          onChangeText={(text) => setPatientVitals(prev => ({ ...prev, hdl: text }))}
+          keyboardType="numeric"
+          placeholder={t('mg_dl')}
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>{t('hba1c_percent')}</Text>
+        <OptimizedTextInput
+          style={styles.numberInput}
+          value={patientVitals.hba1c}
+          onChangeText={(text) => setPatientVitals(prev => ({ ...prev, hba1c: text }))}
+          keyboardType="numeric"
+          placeholder={t('percentage')}
+        />
       </View>
 
       {/* Updated pollution question instead of AQI */}
       <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>Do you live in a polluted area?</Text>
+        <Text style={styles.questionText}>{t('live_in_polluted_area')}</Text>
         <Text style={styles.questionSubtext}>
-          Consider factors like heavy traffic, industrial areas, poor air quality, or frequent smog
+          {t('consider_factors_traffic_industrial')}
         </Text>
-        <View style={styles.radioRow}>
-          {['yes', 'no'].map((option) => (
+        <View style={styles.radioGroup}>
+          {[
+            { key: 'yes', label: t('yes') },
+            { key: 'no', label: t('no') }
+          ].map((option) => (
             <TouchableOpacity
-              key={option}
+              key={option.key}
               style={[
                 styles.radioOption,
-                patientVitals.pollutedArea === option && styles.radioOptionSelected
+                patientVitals.pollutedArea === option.key && styles.radioOptionSelected,
               ]}
-              onPress={() => setPatientVitals(prev => ({ ...prev, pollutedArea: option }))}
+              onPress={() => setPatientVitals(prev => ({ ...prev, pollutedArea: option.key }))}
             >
               <Text style={[
                 styles.radioText,
-                patientVitals.pollutedArea === option && styles.radioTextSelected
+                patientVitals.pollutedArea === option.key && styles.radioTextSelected,
               ]}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+                {option.label}
               </Text>
             </TouchableOpacity>
           ))}
@@ -816,26 +818,29 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
 
   const renderMedicalHistory = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>Medical History</Text>
-      <Text style={styles.stepSubtitle}>Current and past medical conditions</Text>
-
+      <Text style={styles.stepTitle}>{t('medical_history')}</Text>
+      <Text style={styles.stepSubtitle}>{t('current_past_medical_conditions')}</Text>
+      
       <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>Do you have Hypertension?</Text>
-        <View style={styles.radioRow}>
-          {['yes', 'no'].map((option) => (
+        <Text style={styles.questionText}>{t('do_you_have_hypertension')}</Text>
+        <View style={styles.radioGroup}>
+          {[
+            { key: 'yes', label: t('yes') },
+            { key: 'no', label: t('no') }
+          ].map((option) => (
             <TouchableOpacity
-              key={option}
+              key={option.key}
               style={[
                 styles.radioOption,
-                medicalHistory.hypertension === option && styles.radioOptionSelected
+                medicalHistory.hypertension === option.key && styles.radioOptionSelected,
               ]}
-              onPress={() => setMedicalHistory(prev => ({ ...prev, hypertension: option }))}
+              onPress={() => setMedicalHistory(prev => ({ ...prev, hypertension: option.key }))}
             >
               <Text style={[
                 styles.radioText,
-                medicalHistory.hypertension === option && styles.radioTextSelected
+                medicalHistory.hypertension === option.key && styles.radioTextSelected,
               ]}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+                {option.label}
               </Text>
             </TouchableOpacity>
           ))}
@@ -843,22 +848,25 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>Do you have Diabetes?</Text>
-        <View style={styles.radioRow}>
-          {['yes', 'no'].map((option) => (
+        <Text style={styles.questionText}>{t('do_you_have_diabetes')}</Text>
+        <View style={styles.radioGroup}>
+          {[
+            { key: 'yes', label: t('yes') },
+            { key: 'no', label: t('no') }
+          ].map((option) => (
             <TouchableOpacity
-              key={option}
+              key={option.key}
               style={[
                 styles.radioOption,
-                medicalHistory.diabetes === option && styles.radioOptionSelected
+                medicalHistory.diabetes === option.key && styles.radioOptionSelected,
               ]}
-              onPress={() => setMedicalHistory(prev => ({ ...prev, diabetes: option }))}
+              onPress={() => setMedicalHistory(prev => ({ ...prev, diabetes: option.key }))}
             >
               <Text style={[
                 styles.radioText,
-                medicalHistory.diabetes === option && styles.radioTextSelected
+                medicalHistory.diabetes === option.key && styles.radioTextSelected,
               ]}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+                {option.label}
               </Text>
             </TouchableOpacity>
           ))}
@@ -867,34 +875,37 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
 
       {medicalHistory.diabetes === 'yes' && (
         <View style={styles.inputContainer}>
-          <Text style={styles.label}>Random Blood Sugar (mg/dL)</Text>
+          <Text style={styles.label}>{t('random_blood_sugar_mg_dl')}</Text>
           <OptimizedTextInput
             style={styles.numberInput}
-            placeholder="Enter value"
             value={medicalHistory.rnddiabetes}
             onChangeText={(text) => setMedicalHistory(prev => ({ ...prev, rnddiabetes: text }))}
             keyboardType="numeric"
+            placeholder={t('mg_dl')}
           />
         </View>
       )}
 
       <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>Do you have irregular heartbeat (Atrial Fibrillation)?</Text>
-        <View style={styles.radioRow}>
-          {['yes', 'no'].map((option) => (
+        <Text style={styles.questionText}>{t('irregular_heartbeat_atrial_fib')}</Text>
+        <View style={styles.radioGroup}>
+          {[
+            { key: 'yes', label: t('yes') },
+            { key: 'no', label: t('no') }
+          ].map((option) => (
             <TouchableOpacity
-              key={option}
+              key={option.key}
               style={[
                 styles.radioOption,
-                medicalHistory.irregularHeartbeat === option && styles.radioOptionSelected
+                medicalHistory.irregularHeartbeat === option.key && styles.radioOptionSelected,
               ]}
-              onPress={() => setMedicalHistory(prev => ({ ...prev, irregularHeartbeat: option }))}
+              onPress={() => setMedicalHistory(prev => ({ ...prev, irregularHeartbeat: option.key }))}
             >
               <Text style={[
                 styles.radioText,
-                medicalHistory.irregularHeartbeat === option && styles.radioTextSelected
+                medicalHistory.irregularHeartbeat === option.key && styles.radioTextSelected,
               ]}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+                {option.label}
               </Text>
             </TouchableOpacity>
           ))}
@@ -902,110 +913,115 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>Family history of stroke or heart disease?</Text>
-        <View style={styles.radioRow}>
-          {['yes', 'no'].map((option) => (
+        <Text style={styles.questionText}>{t('family_history_stroke_heart')}</Text>
+        <View style={styles.radioGroup}>
+          {[
+            { key: 'yes', label: t('yes') },
+            { key: 'no', label: t('no') }
+          ].map((option) => (
             <TouchableOpacity
-              key={option}
+              key={option.key}
               style={[
                 styles.radioOption,
-                medicalHistory.familyHistory === option && styles.radioOptionSelected
+                medicalHistory.familyHistory === option.key && styles.radioOptionSelected,
               ]}
-              onPress={() => setMedicalHistory(prev => ({ ...prev, familyHistory: option }))}
+              onPress={() => setMedicalHistory(prev => ({ ...prev, familyHistory: option.key }))}
             >
               <Text style={[
                 styles.radioText,
-                medicalHistory.familyHistory === option && styles.radioTextSelected
+                medicalHistory.familyHistory === option.key && styles.radioTextSelected,
               ]}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+                {option.label}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
       </View>
 
-      {/* TIA History with info icon */}
       <View style={styles.questionContainer}>
-        <View style={styles.labelWithInfo}>
-          <Text style={styles.questionText}>History of TIA (mini-stroke)?</Text>
-          {/* <TouchableOpacity onPress={showTIAInfo} style={styles.infoButton}>
-            <Ionicons name="information-circle-outline" size={20} color={colors.primary} />
-          </TouchableOpacity> */}
-        </View>
-        <View style={styles.radioRow}>
-          {['yes', 'no'].map((option) => (
+        <Text style={styles.questionText}>{t('history_tia_mini_stroke')}</Text>
+        <View style={styles.radioGroup}>
+          {[
+            { key: 'yes', label: t('yes') },
+            { key: 'no', label: t('no') }
+          ].map((option) => (
             <TouchableOpacity
-              key={option}
+              key={option.key}
               style={[
                 styles.radioOption,
-                additionalFactors.tiaHistory === option && styles.radioOptionSelected
+                additionalFactors.tiaHistory === option.key && styles.radioOptionSelected,
               ]}
-              onPress={() => setAdditionalFactors(prev => ({ ...prev, tiaHistory: option }))}
+              onPress={() => setAdditionalFactors(prev => ({ ...prev, tiaHistory: option.key }))}
             >
               <Text style={[
                 styles.radioText,
-                additionalFactors.tiaHistory === option && styles.radioTextSelected
+                additionalFactors.tiaHistory === option.key && styles.radioTextSelected,
               ]}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+                {option.label}
               </Text>
             </TouchableOpacity>
           ))}
         </View>
       </View>
 
-      <View style={styles.checkboxSection}>
-        <Text style={styles.questionText}>Past Medical Conditions (Check all that apply):</Text>
-        {[
-          { key: 'thyroidDisease', label: 'Thyroid Disease' },
-          { key: 'heartDisease', label: 'Heart Disease' },
-          { key: 'asthma', label: 'Asthma' },
-          { key: 'migraine', label: 'Migraine' }
-        ].map(condition => (
-          <TouchableOpacity
-            key={condition.key}
-            style={styles.checkboxItem}
-            onPress={() => setPastConditions(prev => ({
-              ...prev,
-              [condition.key]: !prev[condition.key]
-            }))}
-          >
-            <View style={[
-              styles.checkbox,
-              pastConditions[condition.key] && styles.checkboxSelected
-            ]}>
-              {pastConditions[condition.key] && (
-                <Ionicons name="checkmark" size={16} color={colors.white} />
-              )}
-            </View>
-            <Text style={styles.checkboxLabel}>{condition.label}</Text>
-          </TouchableOpacity>
-        ))}
+      <View style={styles.questionContainer}>
+        <Text style={styles.questionText}>{t('past_medical_conditions_check_all')}:</Text>
+        <View style={styles.checkboxSection}>
+          {[
+            { key: 'thyroidDisease', label: t('thyroid_disease') },
+            { key: 'heartDisease', label: t('heart_disease') },
+            { key: 'asthma', label: t('asthma') },
+            { key: 'migraine', label: t('migraine') }
+          ].map(condition => (
+            <TouchableOpacity
+              key={condition.key}
+              style={styles.checkboxItem}
+              onPress={() => setPastConditions(prev => ({
+                ...prev,
+                [condition.key]: !prev[condition.key]
+              }))}
+            >
+              <View style={[
+                styles.checkbox,
+                pastConditions[condition.key] && styles.checkboxSelected,
+              ]}>
+                {pastConditions[condition.key] && (
+                  <Ionicons name="checkmark" size={16} color={colors.white} />
+                )}
+              </View>
+              <Text style={styles.checkboxLabel}>{condition.label}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       </View>
     </View>
   );
 
   const renderLifestyle = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>Lifestyle Factors</Text>
-      <Text style={styles.stepSubtitle}>Daily habits and behaviors</Text>
-
+      <Text style={styles.stepTitle}>{t('lifestyle_factors')}</Text>
+      <Text style={styles.stepSubtitle}>{t('daily_habits_behaviors')}</Text>
+      
       <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>Do you exercise regularly?</Text>
-        <View style={styles.radioRow}>
-          {['yes', 'no'].map((option) => (
+        <Text style={styles.questionText}>{t('do_you_exercise_regularly')}</Text>
+        <View style={styles.radioGroup}>
+          {[
+            { key: 'yes', label: t('yes') },
+            { key: 'no', label: t('no') }
+          ].map((option) => (
             <TouchableOpacity
-              key={option}
+              key={option.key}
               style={[
                 styles.radioOption,
-                lifestyle.exercise === option && styles.radioOptionSelected
+                lifestyle.exercise === option.key && styles.radioOptionSelected,
               ]}
-              onPress={() => setLifestyle(prev => ({ ...prev, exercise: option }))}
+              onPress={() => setLifestyle(prev => ({ ...prev, exercise: option.key }))}
             >
               <Text style={[
                 styles.radioText,
-                lifestyle.exercise === option && styles.radioTextSelected
+                lifestyle.exercise === option.key && styles.radioTextSelected,
               ]}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+                {option.label}
               </Text>
             </TouchableOpacity>
           ))}
@@ -1014,22 +1030,27 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
 
       {lifestyle.exercise === 'yes' && (
         <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>Exercise Frequency</Text>
+          <Text style={styles.questionText}>{t('exercise_frequency')}</Text>
           <View style={styles.radioGroup}>
-            {['Daily', '3-4 times/week', '1-2 times/week', 'Occasionally'].map((freq) => (
+            {[
+              { key: 'Daily', label: t('daily') },
+              { key: '3-4 times/week', label: t('3_4_times_week') },
+              { key: '1-2 times/week', label: t('1_2_times_week') },
+              { key: 'Occasionally', label: t('occasionally') }
+            ].map((freq) => (
               <TouchableOpacity
-                key={freq}
+                key={freq.key}
                 style={[
                   styles.radioOption,
-                  lifestyle.exerciseFrequency === freq && styles.radioOptionSelected
+                  lifestyle.exerciseFrequency === freq.key && styles.radioOptionSelected,
                 ]}
-                onPress={() => setLifestyle(prev => ({ ...prev, exerciseFrequency: freq }))}
+                onPress={() => setLifestyle(prev => ({ ...prev, exerciseFrequency: freq.key }))}
               >
                 <Text style={[
                   styles.radioText,
-                  lifestyle.exerciseFrequency === freq && styles.radioTextSelected
+                  lifestyle.exerciseFrequency === freq.key && styles.radioTextSelected,
                 ]}>
-                  {freq}
+                  {freq.label}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -1038,22 +1059,25 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
       )}
 
       <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>Do you smoke or use tobacco?</Text>
-        <View style={styles.radioRow}>
-          {['yes', 'no'].map((option) => (
+        <Text style={styles.questionText}>{t('do_you_smoke_tobacco')}</Text>
+        <View style={styles.radioGroup}>
+          {[
+            { key: 'yes', label: t('yes') },
+            { key: 'no', label: t('no') }
+          ].map((option) => (
             <TouchableOpacity
-              key={option}
+              key={option.key}
               style={[
                 styles.radioOption,
-                lifestyle.smoke === option && styles.radioOptionSelected
+                lifestyle.smoke === option.key && styles.radioOptionSelected,
               ]}
-              onPress={() => setLifestyle(prev => ({ ...prev, smoke: option }))}
+              onPress={() => setLifestyle(prev => ({ ...prev, smoke: option.key }))}
             >
               <Text style={[
                 styles.radioText,
-                lifestyle.smoke === option && styles.radioTextSelected
+                lifestyle.smoke === option.key && styles.radioTextSelected,
               ]}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+                {option.label}
               </Text>
             </TouchableOpacity>
           ))}
@@ -1061,22 +1085,25 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>Do you consume alcohol?</Text>
-        <View style={styles.radioRow}>
-          {['yes', 'no'].map((option) => (
+        <Text style={styles.questionText}>{t('do_you_consume_alcohol')}</Text>
+        <View style={styles.radioGroup}>
+          {[
+            { key: 'yes', label: t('yes') },
+            { key: 'no', label: t('no') }
+          ].map((option) => (
             <TouchableOpacity
-              key={option}
+              key={option.key}
               style={[
                 styles.radioOption,
-                lifestyle.alcohol === option && styles.radioOptionSelected
+                lifestyle.alcohol === option.key && styles.radioOptionSelected,
               ]}
-              onPress={() => setLifestyle(prev => ({ ...prev, alcohol: option }))}
+              onPress={() => setLifestyle(prev => ({ ...prev, alcohol: option.key }))}
             >
               <Text style={[
                 styles.radioText,
-                lifestyle.alcohol === option && styles.radioTextSelected
+                lifestyle.alcohol === option.key && styles.radioTextSelected,
               ]}>
-                {option.charAt(0).toUpperCase() + option.slice(1)}
+                {option.label}
               </Text>
             </TouchableOpacity>
           ))}
@@ -1085,25 +1112,25 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
 
       {lifestyle.alcohol === 'yes' && (
         <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>Alcohol Frequency</Text>
+          <Text style={styles.questionText}>{t('alcohol_frequency')}</Text>
           <View style={styles.radioGroup}>
             {[
-              { key: 'occasionally', label: 'Occasionally' },
-              { key: 'weekly', label: 'Weekly' },
-              { key: 'daily', label: 'Daily' },
-              { key: 'multiple-daily', label: 'Multiple times daily' }
+              { key: 'occasionally', label: t('occasionally') },
+              { key: 'weekly', label: t('weekly') },
+              { key: 'daily', label: t('daily') },
+              { key: 'multiple-daily', label: t('multiple_times_daily') }
             ].map((option) => (
               <TouchableOpacity
                 key={option.key}
                 style={[
                   styles.radioOption,
-                  lifestyle.alcoholFrequency === option.key && styles.radioOptionSelected
+                  lifestyle.alcoholFrequency === option.key && styles.radioOptionSelected,
                 ]}
                 onPress={() => setLifestyle(prev => ({ ...prev, alcoholFrequency: option.key }))}
               >
                 <Text style={[
                   styles.radioText,
-                  lifestyle.alcoholFrequency === option.key && styles.radioTextSelected
+                  lifestyle.alcoholFrequency === option.key && styles.radioTextSelected,
                 ]}>
                   {option.label}
                 </Text>
@@ -1115,29 +1142,27 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
 
       {/* Simple stress yes/no question with switch */}
       <View style={styles.questionContainer}>
-        <Text style={styles.questionText}>Do you experience high stress levels regularly?</Text>
+        <Text style={styles.questionText}>{t('high_stress_levels_regularly')}</Text>
         <View style={styles.switchContainer}>
-          <Text style={styles.switchLabel}>No</Text>
+          <Text style={styles.switchLabel}>{t('no')}</Text>
           <Switch
             value={additionalFactors.highStress === 'yes'}
-            onValueChange={(value) => 
-              setAdditionalFactors(prev => ({ ...prev, highStress: value ? 'yes' : 'no' }))
-            }
+            onValueChange={(value) => setAdditionalFactors(prev => ({ ...prev, highStress: value ? 'yes' : 'no' }))}
             trackColor={{ false: colors.border, true: colors.warning }}
             thumbColor={colors.white}
           />
-          <Text style={styles.switchLabel}>Yes</Text>
+          <Text style={styles.switchLabel}>{t('yes')}</Text>
         </View>
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Average Sleep Hours per Night</Text>
+        <Text style={styles.label}>{t('average_sleep_hours_night')}</Text>
         <OptimizedTextInput
           style={styles.numberInput}
-          placeholder="e.g., 7"
           value={additionalFactors.sleepHours}
           onChangeText={(text) => setAdditionalFactors(prev => ({ ...prev, sleepHours: text }))}
           keyboardType="numeric"
+          placeholder={t('hours')}
         />
       </View>
     </View>
@@ -1146,26 +1171,29 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
   const renderFemaleFactors = () => (
     gender === 'Female' && (
       <View style={styles.stepContainer}>
-        <Text style={styles.stepTitle}>Female-Specific Factors</Text>
-        <Text style={styles.stepSubtitle}>Additional risk factors for women</Text>
-
+        <Text style={styles.stepTitle}>{t('female_specific_factors')}</Text>
+        <Text style={styles.stepSubtitle}>{t('additional_risk_factors_women')}</Text>
+        
         <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>Do you use oral contraceptives?</Text>
-          <View style={styles.radioRow}>
-            {['yes', 'no'].map((option) => (
+          <Text style={styles.questionText}>{t('use_oral_contraceptives')}</Text>
+          <View style={styles.radioGroup}>
+            {[
+              { key: 'yes', label: t('yes') },
+              { key: 'no', label: t('no') }
+            ].map((option) => (
               <TouchableOpacity
-                key={option}
+                key={option.key}
                 style={[
                   styles.radioOption,
-                  femaleFactors.contraceptives === option && styles.radioOptionSelected
+                  femaleFactors.contraceptives === option.key && styles.radioOptionSelected,
                 ]}
-                onPress={() => setFemaleFactors(prev => ({ ...prev, contraceptives: option }))}
+                onPress={() => setFemaleFactors(prev => ({ ...prev, contraceptives: option.key }))}
               >
                 <Text style={[
                   styles.radioText,
-                  femaleFactors.contraceptives === option && styles.radioTextSelected
+                  femaleFactors.contraceptives === option.key && styles.radioTextSelected,
                 ]}>
-                  {option.charAt(0).toUpperCase() + option.slice(1)}
+                  {option.label}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -1173,22 +1201,25 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>Are you on hormone replacement therapy?</Text>
-          <View style={styles.radioRow}>
-            {['yes', 'no'].map((option) => (
+          <Text style={styles.questionText}>{t('hormone_replacement_therapy')}</Text>
+          <View style={styles.radioGroup}>
+            {[
+              { key: 'yes', label: t('yes') },
+              { key: 'no', label: t('no') }
+            ].map((option) => (
               <TouchableOpacity
-                key={option}
+                key={option.key}
                 style={[
                   styles.radioOption,
-                  femaleFactors.hormoneTherapy === option && styles.radioOptionSelected
+                  femaleFactors.hormoneTherapy === option.key && styles.radioOptionSelected,
                 ]}
-                onPress={() => setFemaleFactors(prev => ({ ...prev, hormoneTherapy: option }))}
+                onPress={() => setFemaleFactors(prev => ({ ...prev, hormoneTherapy: option.key }))}
               >
                 <Text style={[
                   styles.radioText,
-                  femaleFactors.hormoneTherapy === option && styles.radioTextSelected
+                  femaleFactors.hormoneTherapy === option.key && styles.radioTextSelected,
                 ]}>
-                  {option.charAt(0).toUpperCase() + option.slice(1)}
+                  {option.label}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -1196,22 +1227,25 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.questionContainer}>
-          <Text style={styles.questionText}>History of pregnancy-related hypertension?</Text>
-          <View style={styles.radioRow}>
-            {['yes', 'no'].map((option) => (
+          <Text style={styles.questionText}>{t('pregnancy_related_hypertension')}</Text>
+          <View style={styles.radioGroup}>
+            {[
+              { key: 'yes', label: t('yes') },
+              { key: 'no', label: t('no') }
+            ].map((option) => (
               <TouchableOpacity
-                key={option}
+                key={option.key}
                 style={[
                   styles.radioOption,
-                  femaleFactors.pregnancyHypertension === option && styles.radioOptionSelected
+                  femaleFactors.pregnancyHypertension === option.key && styles.radioOptionSelected,
                 ]}
-                onPress={() => setFemaleFactors(prev => ({ ...prev, pregnancyHypertension: option }))}
+                onPress={() => setFemaleFactors(prev => ({ ...prev, pregnancyHypertension: option.key }))}
               >
                 <Text style={[
                   styles.radioText,
-                  femaleFactors.pregnancyHypertension === option && styles.radioTextSelected
+                  femaleFactors.pregnancyHypertension === option.key && styles.radioTextSelected,
                 ]}>
-                  {option.charAt(0).toUpperCase() + option.slice(1)}
+                  {option.label}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -1223,30 +1257,30 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
 
   const renderSymptoms = () => (
     <View style={styles.stepContainer}>
-      <Text style={styles.stepTitle}>Current Symptoms</Text>
-      <Text style={styles.stepSubtitle}>Check any symptoms you're currently experiencing</Text>
-
+      <Text style={styles.stepTitle}>{t('current_symptoms')}</Text>
+      <Text style={styles.stepSubtitle}>{t('check_symptoms_experiencing')}</Text>
+      
       <View style={styles.symptomsGrid}>
         {symptomOptions.map((symptom) => (
           <TouchableOpacity
             key={symptom}
             style={[
               styles.symptomItem,
-              symptoms.includes(symptom) && styles.symptomItemSelected
+              symptoms.includes(symptom) && styles.symptomItemSelected,
             ]}
             onPress={() => toggleSymptom(symptom)}
           >
             <View style={[
               styles.symptomCheckbox,
-              symptoms.includes(symptom) && styles.symptomCheckboxSelected
+              symptoms.includes(symptom) && styles.symptomCheckboxSelected,
             ]}>
               {symptoms.includes(symptom) && (
-                <Ionicons name="checkmark" size={16} color={colors.white} />
+                <Ionicons name="checkmark" size={16} color={colors.primary} />
               )}
             </View>
             <Text style={[
               styles.symptomText,
-              symptoms.includes(symptom) && styles.symptomTextSelected
+              symptoms.includes(symptom) && styles.symptomTextSelected,
             ]}>
               {symptom}
             </Text>
@@ -1256,9 +1290,9 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
 
       {symptoms.length > 0 && (
         <View style={styles.urgentWarning}>
-          <Ionicons name="warning" size={24} color={colors.error} />
+          <Ionicons name="warning" size={20} color={colors.error} />
           <Text style={styles.urgentWarningText}>
-            If you're experiencing these symptoms, please seek immediate medical attention and call emergency services.
+            {t('experiencing_symptoms_seek_immediate_care')}
           </Text>
         </View>
       )}
@@ -1268,30 +1302,26 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
   const renderResults = () => (
     <View style={styles.resultsContainer}>
       <View style={styles.scoreCard}>
-        <Text style={styles.scoreTitle}>Your Stroke Risk Assessment</Text>
+        <Text style={styles.scoreTitle}>{t('your_stroke_risk_assessment')}</Text>
         <Text style={styles.scoreValue}>{results.riskScore}/21</Text>
         <View style={[
           styles.riskBadge,
-          {
-            backgroundColor: 
-              results.riskCategory === 'Low' ? colors.success :
-              results.riskCategory === 'Moderate' ? colors.warning :
-              colors.error
-          }
+          { backgroundColor: results.riskCategory === t('low') ? colors.success : 
+                           results.riskCategory === t('moderate') ? colors.warning : colors.error }
         ]}>
-          <Text style={styles.riskBadgeText}>{results.riskCategory} Risk</Text>
+          <Text style={styles.riskBadgeText}>{results.riskCategory} {t('risk')}</Text>
         </View>
       </View>
 
       <View style={styles.recommendationCard}>
-        <Text style={styles.recommendationTitle}>Recommendations</Text>
+        <Text style={styles.recommendationTitle}>{t('recommendations')}</Text>
         <Text style={styles.recommendationText}>{results.recommendations}</Text>
         
         {results.urgentReferral && (
           <View style={styles.urgentReferral}>
-            <MaterialIcons name="local-hospital" size={24} color={colors.error} />
+            <Ionicons name="warning" size={20} color={colors.error} />
             <Text style={styles.urgentReferralText}>
-              Urgent medical consultation recommended. Please contact your healthcare provider immediately.
+              {t('urgent_medical_consultation_recommended')}
             </Text>
           </View>
         )}
@@ -1299,32 +1329,25 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
 
       <View style={styles.actionButtons}>
         <Button
-          title="Find Healthcare Provider"
-          variant="primary"
-          size="large"
-          icon={<MaterialIcons name="local-hospital" size={20} color={colors.white} />}
+          title={t('find_healthcare_providers')}
           onPress={() => {
             Alert.alert(
-              'Healthcare Providers',
-              'We recommend consulting with a qualified healthcare provider for proper evaluation.',
-              [{ text: 'OK' }]
+              t('healthcare_providers'),
+              t('recommend_consulting_qualified_provider'),
+              [{ text: t('ok') }]
             );
           }}
           style={styles.actionButton}
         />
 
         <Button
-          title="View Stroke Symptoms"
-          variant="outline"
-          size="large"
-          icon={<Ionicons name="warning-outline" size={20} color={colors.primary} />}
+          title={t('learn_about_symptoms')}
           onPress={() => navigation.navigate('BrainSymptoms')}
           style={styles.actionButton}
         />
 
         <Button
-          title="Retake Assessment"
-          variant="ghost"
+          title={t('retake_assessment')}
           onPress={() => {
             setShowResults(false);
             setCurrentStep(1);
@@ -1338,15 +1361,15 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
             setSymptoms([]);
             setGender('');
           }}
+          style={styles.actionButton}
         />
       </View>
 
       <View style={styles.disclaimerCard}>
-        <Ionicons name="information-circle-outline" size={20} color={colors.warning} />
+        <Ionicons name="information-circle" size={20} color={colors.warning} />
         <Text style={styles.disclaimerText}>
-          <Text style={styles.disclaimerTitle}>Medical Disclaimer: </Text>
-          This assessment is based on established medical camp protocols and is for educational purposes only. 
-          It does not replace professional medical diagnosis or treatment. Always consult healthcare providers for medical advice.
+          <Text style={styles.disclaimerTitle}>{t('medical_disclaimer')}:</Text>
+          {'\n'}{t('assessment_educational_purposes_disclaimer')}
         </Text>
       </View>
     </View>
@@ -1355,147 +1378,49 @@ const StrokeRiskAssessmentScreen = ({ navigation }) => {
   if (showResults) {
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar barStyle="dark-content" backgroundColor={colors.background} />
-        <Header 
-          title="Assessment Results" 
-          showBack={true}
-          onBackPress={() => navigation.goBack()}
-        />
-        
-        <ScrollView style={styles.scrollView}>
-          <View style={styles.resultsContainer}>
-            <Text style={styles.scoreTitle}>Your Stroke Risk Assessment</Text>
-            
-            <View style={styles.scoreCard}>
-              <Text style={styles.scoreValue}>{results.riskScore}/21</Text>
-              <View style={[styles.riskBadge, { backgroundColor: 
-                results.riskCategory === 'Low' ? colors.success :
-                results.riskCategory === 'Moderate' ? colors.warning : colors.error
-              }]}>
-                <Text style={styles.riskBadgeText}>{results.riskCategory} Risk</Text>
-              </View>
-            </View>
-
-            <View style={styles.recommendationCard}>
-              <Text style={styles.recommendationTitle}>Recommendations</Text>
-              <Text style={styles.recommendationText}>{results.recommendations}</Text>
-              
-              {results.urgentReferral && (
-                <View style={styles.urgentReferral}>
-                  <Ionicons name="warning" size={20} color={colors.error} />
-                  <Text style={styles.urgentReferralText}>
-                    Urgent medical consultation recommended. Please contact your healthcare provider immediately.
-                  </Text>
-                </View>
-              )}
-            </View>
-
-            <View style={styles.actionButtons}>
-              <Button
-                title="Find Healthcare Providers"
-                onPress={() => {
-                  Alert.alert(
-                    'Healthcare Providers',
-                    'We recommend consulting with a qualified healthcare provider for proper evaluation.',
-                    [{ text: 'OK' }]
-                  );
-                }}
-                style={styles.actionButton}
-              />
-              
-              <Button
-                title="Check Brain Stroke Symptoms"
-                onPress={() => navigation.navigate('BrainSymptoms')}
-                style={styles.actionButton}
-              />
-              
-              <Button
-                title="Take New Assessment"
-                onPress={() => {
-                  setShowResults(false);
-                  setCurrentStep(1);
-                  // Reset all form data
-                  setPatientVitals({ age: '', weight: '', height: '', bloodPressure: '', ldl: '', hdl: '', cholesterol: '', hba1c: '', pollutedArea: '', atherogenicRisk: '' });
-                  setLifestyle({ exercise: '', exerciseFrequency: '', diet: '', outsideFood: '', education: '', profession: '', alcohol: '', smoke: '', alcoholFrequency: '' });
-                  setMedicalHistory({ hypertension: '', diabetes: '', rnddiabetes: '', irregularHeartbeat: '', snoring: '', bpCheckFrequency: '', familyHistory: '' });
-                  setAdditionalFactors({ highStress: 'no', sleepHours: '', tiaHistory: 'no' });
-                  setPastConditions({ thyroidDisease: false, heartDisease: false, asthma: false, migraine: false });
-                  setFemaleFactors({ contraceptives: '', hormoneTherapy: '', pregnancyHypertension: '' });
-                  setSymptoms([]);
-                  setGender('');
-                }}
-              />
-            </View>
-
-            <View style={styles.disclaimerCard}>
-              <Ionicons name="information-circle" size={20} color={colors.warning} />
-              <View>
-                <Text style={styles.disclaimerTitle}>Medical Disclaimer:</Text>
-                <Text style={styles.disclaimerText}>
-                  This assessment is based on established medical camp protocols and is for educational purposes only.
-                  It does not replace professional medical diagnosis or treatment. Always consult healthcare providers for medical advice.
-                </Text>
-              </View>
-            </View>
-          </View>
-        </ScrollView>
+        <StatusBar barStyle="dark-content" backgroundColor={colors.primary} />
+        {renderResults()}
       </SafeAreaView>
     );
   }
 
   return (
     <SafeAreaView style={styles.container}>
-     <View style={[styles.container, { paddingTop: insets.top }]}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
+      <StatusBar barStyle="dark-content" backgroundColor={colors.primary} />
       
       {/* Fixed Header with proper spacing */}
-      <View style={styles.headerContainer}>
-        <Header 
-          navigation={navigation} 
-          title="Risk Assessment" 
-          currentScreen="Riskometer"
-        />
-      </View>
-      
-
-
       <View style={styles.headerSection}>
-        <Text style={styles.mainTitle}>Comprehensive Stroke Risk Assessment</Text>
-        <Text style={styles.subtitle}>Based on validated medical camp protocols used in health screenings</Text>
+        <Text style={styles.mainTitle}>{t('comprehensive_stroke_risk_assessment')}</Text>
+        <Text style={styles.subtitle}>{t('based_validated_medical_protocols')}</Text>
       </View>
-
-      {renderStepIndicator()}
-      {renderProfilePrompt()}
-      
 
       <ScrollView style={styles.scrollView}>
+        {renderStepIndicator()}
+        {renderProfilePrompt()}
+
         {currentStep === 1 && renderBasicInfo()}
         {currentStep === 2 && renderVitals()}
         {currentStep === 3 && renderMedicalHistory()}
         {currentStep === 4 && renderLifestyle()}
         {currentStep === 5 && (gender === 'Female' ? renderFemaleFactors() : renderSymptoms())}
         {currentStep === 6 && renderSymptoms()}
-      </ScrollView>
 
-      <View style={styles.navigationButtons}>
-        {currentStep > 1 && (
+        <View style={styles.navigationButtons}>
+          {currentStep > 1 && (
+            <Button
+              title={t('previous')}
+              onPress={prevStep}
+              style={[styles.navButton, { backgroundColor: colors.textMuted }]}
+            />
+          )}
           <Button
-            title="Previous"
-            onPress={prevStep}
+            title={loading ? t('saving') : (currentStep === totalSteps ? t('complete_assessment') : t('next'))}
+            onPress={nextStep}
+            disabled={loading}
             style={styles.navButton}
-            variant="outline"
           />
-        )}
-        
-        <Button
-          title={loading ? "Saving..." : (currentStep === totalSteps ? "Complete Assessment" : "Next")}
-          onPress={nextStep}
-          style={styles.navButton}
-          disabled={loading}
-          iconPosition="right"
-        />
-      </View>
-    </View>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -1522,40 +1447,40 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  
   scrollView: {
     flex: 1,
   },
-  
-  // // Pre-filled input styles
-  // inputContainer: {
-  //   marginBottom: 16,
-  // },
-  // inputHeader: {
-  //   flexDirection: 'row',
-  //   justifyContent: 'space-between',
-  //   alignItems: 'center',
-  //   marginBottom: 8,
-  // },
-  // preFilledBadge: {
-  //   flexDirection: 'row',
-  //   alignItems: 'center',
-  //   backgroundColor: `${colors.success}15`,
-  //   paddingHorizontal: 8,
-  //   paddingVertical: 4,
-  //   borderRadius: 12,
-  // },
-  // preFilledText: {
-  //   fontSize: 10,
-  //   color: colors.success,
-  //   marginLeft: 4,
-  //   fontWeight: '500',
-  // },
-  // preFilledInput: {
-  //   borderColor: colors.success,
-  //   backgroundColor: `${colors.success}08`,
-  // },
-  
+  // Pre-filled input styles
+  inputContainer: {
+    marginBottom: 16,
+  },
+  inputHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  preFilledBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: `${colors.success}15`,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    position: 'absolute',
+    top: -8,
+    right: 8,
+  },
+  preFilledText: {
+    fontSize: 10,
+    color: colors.success,
+    marginLeft: 4,
+    fontWeight: '500',
+  },
+  preFilledInput: {
+    borderColor: colors.success,
+    backgroundColor: `${colors.success}08`,
+  },
   // Profile prompt styles
   profilePrompt: {
     marginHorizontal: 20,
@@ -1597,7 +1522,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '600',
   },
-
   headerSection: {
     backgroundColor: colors.cardBackground,
     padding: 24,
@@ -1605,7 +1529,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  
   mainTitle: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -1613,14 +1536,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 8,
   },
-  
   subtitle: {
     fontSize: 14,
     color: colors.textSecondary,
     textAlign: 'center',
     lineHeight: 20,
   },
-  
   stepIndicator: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -1628,29 +1549,24 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     marginBottom: 20,
   },
-  
   stepDot: {
     width: 10,
     height: 10,
     borderRadius: 5,
     marginHorizontal: 3,
   },
-  
   stepDotActive: {
     backgroundColor: colors.primary,
   },
-  
   stepDotInactive: {
     backgroundColor: colors.border,
   },
-  
   stepText: {
     marginLeft: 12,
     fontSize: 14,
     color: colors.textSecondary,
     fontWeight: '500',
   },
-  
   stepContainer: {
     backgroundColor: colors.cardBackground,
     marginHorizontal: 20,
@@ -1658,48 +1574,36 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
   },
-  
   stepTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: colors.textPrimary,
     marginBottom: 4,
   },
-  
   stepSubtitle: {
     fontSize: 14,
     color: colors.textSecondary,
     marginBottom: 20,
   },
-  
   inputRow: {
     flexDirection: 'row',
     gap: 12,
   },
-  
-  inputContainer: {
-    flex: 1,
-    marginBottom: 16,
-  },
-  
   label: {
     fontSize: 16,
     fontWeight: '500',
     color: colors.textPrimary,
     marginBottom: 8,
   },
-  
   labelWithInfo: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 8,
   },
-
   infoButton: {
     marginLeft: 8,
     padding: 4,
   },
-  
   textInput: {
     backgroundColor: colors.background,
     borderWidth: 1,
@@ -1710,7 +1614,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textPrimary,
   },
-  
   numberInput: {
     backgroundColor: colors.background,
     borderWidth: 1,
@@ -1721,7 +1624,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textPrimary,
   },
-
   bmiDisplay: {
     backgroundColor: colors.background,
     borderRadius: 12,
@@ -1731,26 +1633,22 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-
   bmiLabel: {
     fontSize: 14,
     color: colors.textSecondary,
     marginBottom: 4,
   },
-
   bmiValue: {
     fontSize: 24,
     fontWeight: 'bold',
     color: colors.primary,
     marginBottom: 4,
   },
-
   bmiCategory: {
     fontSize: 14,
     color: colors.textSecondary,
     fontStyle: 'italic',
   },
-
   switchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1759,24 +1657,20 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 12,
   },
-
   switchLabel: {
     fontSize: 16,
     color: colors.textSecondary,
     marginHorizontal: 12,
   },
-  
   questionContainer: {
     marginBottom: 20,
   },
-  
   questionText: {
     fontSize: 16,
     color: colors.textPrimary,
     marginBottom: 12,
     fontWeight: '500',
   },
-
   questionSubtext: {
     fontSize: 12,
     color: colors.textMuted,
@@ -1784,18 +1678,15 @@ const styles = StyleSheet.create({
     lineHeight: 16,
     fontStyle: 'italic',
   },
-  
   radioRow: {
     flexDirection: 'row',
     gap: 12,
   },
-  
   radioGroup: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 8,
   },
-  
   radioOption: {
     backgroundColor: colors.background,
     paddingVertical: 10,
@@ -1804,32 +1695,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  
   radioOptionSelected: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
-  
   radioText: {
     color: colors.textPrimary,
     fontSize: 14,
   },
-  
   radioTextSelected: {
     color: colors.white,
     fontWeight: '500',
   },
-  
   checkboxSection: {
     marginTop: 8,
   },
-  
   checkboxItem: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 8,
   },
-  
   checkbox: {
     width: 24,
     height: 24,
@@ -1840,21 +1725,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  
   checkboxSelected: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
-  
   checkboxLabel: {
     fontSize: 16,
     color: colors.textPrimary,
   },
-  
   symptomsGrid: {
     marginBottom: 16,
   },
-  
   symptomItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1866,12 +1747,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  
   symptomItemSelected: {
     backgroundColor: colors.primary,
     borderColor: colors.primary,
   },
-  
   symptomCheckbox: {
     width: 20,
     height: 20,
@@ -1882,23 +1761,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  
   symptomCheckboxSelected: {
     backgroundColor: colors.white,
     borderColor: colors.white,
   },
-  
   symptomText: {
     fontSize: 14,
     color: colors.textPrimary,
     flex: 1,
   },
-  
   symptomTextSelected: {
     color: colors.white,
     fontWeight: '500',
   },
-  
   urgentWarning: {
     flexDirection: 'row',
     backgroundColor: `${colors.error}15`,
@@ -1908,7 +1783,6 @@ const styles = StyleSheet.create({
     borderLeftColor: colors.error,
     alignItems: 'flex-start',
   },
-  
   urgentWarningText: {
     flex: 1,
     fontSize: 14,
@@ -1917,23 +1791,19 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     lineHeight: 20,
   },
-  
   navigationButtons: {
     flexDirection: 'row',
     paddingHorizontal: 20,
     paddingBottom: 40,
     gap: 12,
   },
-  
   navButton: {
     flex: 1,
   },
-  
   // Results styles
   resultsContainer: {
     padding: 20,
   },
-  
   scoreCard: {
     backgroundColor: colors.cardBackground,
     borderRadius: 16,
@@ -1946,54 +1816,46 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 5,
   },
-  
   scoreTitle: {
     fontSize: 18,
     color: colors.textSecondary,
     marginBottom: 12,
     textAlign: 'center',
   },
-  
   scoreValue: {
     fontSize: 48,
     fontWeight: 'bold',
     color: colors.textPrimary,
     marginBottom: 16,
   },
-  
   riskBadge: {
     paddingVertical: 8,
     paddingHorizontal: 20,
     borderRadius: 20,
   },
-  
   riskBadgeText: {
     color: colors.white,
     fontSize: 16,
     fontWeight: 'bold',
   },
-  
   recommendationCard: {
     backgroundColor: colors.cardBackground,
     borderRadius: 16,
     padding: 20,
     marginBottom: 20,
   },
-  
   recommendationTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: colors.textPrimary,
     marginBottom: 12,
   },
-  
   recommendationText: {
     fontSize: 16,
     color: colors.textSecondary,
     lineHeight: 24,
     marginBottom: 16,
   },
-  
   urgentReferral: {
     flexDirection: 'row',
     backgroundColor: `${colors.error}15`,
@@ -2001,7 +1863,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'flex-start',
   },
-  
   urgentReferralText: {
     flex: 1,
     fontSize: 14,
@@ -2010,15 +1871,12 @@ const styles = StyleSheet.create({
     marginLeft: 12,
     lineHeight: 20,
   },
-  
   actionButtons: {
     marginBottom: 20,
   },
-  
   actionButton: {
     marginBottom: 12,
   },
-  
   disclaimerCard: {
     flexDirection: 'row',
     backgroundColor: colors.background,
@@ -2028,7 +1886,6 @@ const styles = StyleSheet.create({
     borderLeftColor: colors.warning,
     alignItems: 'flex-start',
   },
-  
   disclaimerText: {
     flex: 1,
     fontSize: 14,
@@ -2036,7 +1893,6 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginLeft: 12,
   },
-  
   disclaimerTitle: {
     fontWeight: 'bold',
     color: colors.textPrimary,
