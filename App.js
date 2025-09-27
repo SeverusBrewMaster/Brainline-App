@@ -18,6 +18,7 @@ import SignUpScreen from './src/screens/SignupScreen';
 import ForgotPasswordScreen from './src/screens/ForgetPasswordScreen';
 import UserProfile from './src/screens/UserProfile';
 import AdminScreen from './src/screens/AdminScreen';
+import './src/i18n';
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();

@@ -11,14 +11,16 @@ import {
   Alert,
   ActivityIndicator,
 } from 'react-native';
-import { Ionicons } from '@expo/vector-icons'; // Better icons for password visibility
+import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
 
 // Import the AuthService we created
 import { AuthService } from '../services';
 import { ADMIN_EMAIL } from '../config/constants';
 
-
 const LoginScreen = ({ navigation }) => {
+  const { t } = useTranslation();
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -29,31 +31,31 @@ const LoginScreen = ({ navigation }) => {
     const newErrors = {};
     
     if (!email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('email_required');
     } else if (!/\S+@\S+\.\S+/.test(email)) {
-      newErrors.email = 'Please enter a valid email';
+      newErrors.email = t('please_enter_valid_email');
     }
-    
+
     if (!password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = t('password_required');
     } else if (password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
+      newErrors.password = t('password_must_be_6_characters');
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleLogin = async () => {
     if (!validateInputs()) return;
-    
+
     setLoading(true);
     setErrors({});
-    
+
     try {
       const user = await AuthService.signIn(email.trim(), password);
       console.log('✅ Login successful:', user.uid);
-      
+
       // ✅ FORCEFUL NAVIGATION - Add this as backup
       setTimeout(() => {
         console.log('🚀 Forcing navigation to Main app...');
@@ -62,68 +64,66 @@ const LoginScreen = ({ navigation }) => {
           routes: [{ name: user.email.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? 'Admin' : 'Main' }],
         });
       }, 50); // Small delay to ensure auth state is updated
-      
+
     } catch (error) {
       console.error('❌ Login error:', error);
-      
-      let errorMessage = 'Login failed. Please try again.';
-      
+      let errorMessage = t('login_failed_try_again');
+
       switch (error.code) {
         case 'auth/user-not-found':
-          errorMessage = 'No account found with this email address.';
+          errorMessage = t('no_account_found_email');
           break;
         case 'auth/wrong-password':
-          errorMessage = 'Incorrect password. Please try again.';
+          errorMessage = t('incorrect_password_try_again');
           break;
         case 'auth/invalid-email':
-          errorMessage = 'Please enter a valid email address.';
+          errorMessage = t('please_enter_valid_email_address');
           break;
         case 'auth/user-disabled':
-          errorMessage = 'This account has been disabled. Please contact support.';
+          errorMessage = t('account_disabled_contact_support');
           break;
         case 'auth/too-many-requests':
-          errorMessage = 'Too many failed attempts. Please try again later.';
+          errorMessage = t('too_many_failed_attempts');
           break;
         case 'auth/network-request-failed':
-          errorMessage = 'Network error. Please check your connection.';
+          errorMessage = t('network_error_check_connection');
           break;
         default:
           if (error.message) {
             errorMessage = error.message;
           }
       }
-      
-      Alert.alert('Login Error', errorMessage);
+
+      Alert.alert(t('login_error'), errorMessage);
     } finally {
       setLoading(false);
     }
   };
 
-
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
+    <KeyboardAvoidingView 
+      style={styles.container} 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.content}>
         {/* Logo */}
         <View style={styles.logoContainer}>
           <Image
-            source={require('../../assets/Strokelogo.png')}
+            source={require('../assets/logo.png')}
             style={styles.logo}
             resizeMode="contain"
           />
         </View>
 
         {/* Title */}
-        <Text style={styles.title}>Brainline</Text>
-        <Text style={styles.subtitle}>Access your health dashboard securely</Text>
+        <Text style={styles.title}>{t('brainline')}</Text>
+        <Text style={styles.subtitle}>{t('access_health_dashboard_securely')}</Text>
 
         {/* Email Input */}
         <View style={styles.inputContainer}>
           <TextInput
             style={[styles.input, errors.email && styles.inputError]}
-            placeholder="Email address"
+            placeholder={t('email_address')}
             placeholderTextColor={colors.placeholder}
             value={email}
             onChangeText={(text) => {
@@ -147,7 +147,7 @@ const LoginScreen = ({ navigation }) => {
           <View style={styles.passwordContainer}>
             <TextInput
               style={[styles.passwordInput, errors.password && styles.inputError]}
-              placeholder="Password"
+              placeholder={t('password')}
               placeholderTextColor={colors.placeholder}
               value={password}
               onChangeText={(text) => {
@@ -165,9 +165,9 @@ const LoginScreen = ({ navigation }) => {
               disabled={loading}
             >
               <Ionicons
-                name={passwordVisible ? 'eye-outline' : 'eye-off-outline'}
-                size={20}
-                color={loading ? colors.textMuted : colors.primary}
+                name={passwordVisible ? "eye" : "eye-off"}
+                size={24}
+                color={colors.textMuted}
               />
             </TouchableOpacity>
           </View>
@@ -184,11 +184,11 @@ const LoginScreen = ({ navigation }) => {
         >
           {loading ? (
             <View style={styles.loadingContainer}>
-              <ActivityIndicator color={colors.white} size="small" />
-              <Text style={styles.loadingText}>Signing you in...</Text>
+              <ActivityIndicator size="small" color={colors.white} />
+              <Text style={styles.loadingText}>{t('signing_you_in')}</Text>
             </View>
           ) : (
-            <Text style={styles.buttonText}>Sign In</Text>
+            <Text style={styles.buttonText}>{t('sign_in')}</Text>
           )}
         </TouchableOpacity>
 
@@ -199,26 +199,26 @@ const LoginScreen = ({ navigation }) => {
           disabled={loading}
         >
           <Text style={[styles.forgotText, loading && styles.linkDisabled]}>
-            Forgot your password?
+            {t('forgot_your_password')}
           </Text>
         </TouchableOpacity>
 
         {/* Sign Up Link */}
         <View style={styles.signupContainer}>
-          <Text style={styles.signupText}>New to health monitoring? </Text>
-          <TouchableOpacity 
+          <Text style={styles.signupText}>{t('new_to_health_monitoring')} </Text>
+          <TouchableOpacity
             onPress={() => navigation.navigate('SignUp')}
             disabled={loading}
           >
             <Text style={[styles.signupLink, loading && styles.linkDisabled]}>
-              Create Account
+              {t('create_account')}
             </Text>
           </TouchableOpacity>
         </View>
 
         {/* Security Message */}
         <Text style={styles.securityText}>
-          🔒 Your health data is secure and encrypted
+          {t('health_data_secure_encrypted')}
         </Text>
       </View>
     </KeyboardAvoidingView>

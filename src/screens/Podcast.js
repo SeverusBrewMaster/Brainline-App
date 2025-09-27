@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 import axios from 'axios';
 
 // Import your enhanced components
@@ -30,11 +31,12 @@ const YOUTUBE_API_KEY = 'AIzaSyAdePDcYUZOjEqOCkGdJB2ccvO8hIMv83M';
 const CHANNEL_ID = 'UCFCWIvyEKpUfOgvxSfOm0sw';
 
 const PodcastScreen = ({ navigation }) => {
+  const { t } = useTranslation();
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState(null);
-  
+
   // Get safe area insets to handle notch and status bar
   const insets = useSafeAreaInsets();
 
@@ -46,18 +48,18 @@ const PodcastScreen = ({ navigation }) => {
       const response = await axios.get(
         `https://www.googleapis.com/youtube/v3/search?key=${YOUTUBE_API_KEY}&channelId=${CHANNEL_ID}&part=snippet,id&order=date&maxResults=20&type=video`
       );
-      
+
       setVideos(response.data.items);
     } catch (error) {
       console.error('Error fetching YouTube videos:', error);
-      setError('Unable to load podcasts. Please check your internet connection.');
+      setError(t('unable_to_load_podcasts_check_connection'));
       
       Alert.alert(
-        'Connection Error',
-        'Unable to load podcast videos. Please check your internet connection and try again.',
+        t('connection_error'),
+        t('unable_to_load_podcast_videos_check_connection'),
         [
-          { text: 'Retry', onPress: () => fetchVideos() },
-          { text: 'Cancel', style: 'cancel' }
+          { text: t('retry'), onPress: () => fetchVideos() },
+          { text: t('cancel'), style: 'cancel' }
         ]
       );
     } finally {
@@ -74,12 +76,12 @@ const PodcastScreen = ({ navigation }) => {
     const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
     
     Alert.alert(
-      'Open Podcast',
-      `Watch "${title}" on YouTube?`,
+      t('open_podcast'),
+      t('watch_video_on_youtube', { title }),
       [
-        { text: 'Cancel', style: 'cancel' },
+        { text: t('cancel'), style: 'cancel' },
         {
-          text: 'Watch',
+          text: t('watch'),
           onPress: () => {
             Linking.canOpenURL(youtubeUrl)
               .then((supported) => {
@@ -87,20 +89,20 @@ const PodcastScreen = ({ navigation }) => {
                   Linking.openURL(youtubeUrl);
                 } else {
                   Alert.alert(
-                    'Cannot Open Video',
-                    'YouTube is not available on this device.',
-                    [{ text: 'OK' }]
+                    t('cannot_open_video'),
+                    t('youtube_not_available_device'),
+                    [{ text: t('ok') }]
                   );
                 }
               })
               .catch(() => {
                 Alert.alert(
-                  'Error',
-                  'Unable to open video. Please try again.',
-                  [{ text: 'OK' }]
+                  t('error'),
+                  t('unable_to_open_video_try_again'),
+                  [{ text: t('ok') }]
                 );
               });
-          }
+          },
         }
       ]
     );
@@ -116,11 +118,11 @@ const PodcastScreen = ({ navigation }) => {
     const now = new Date();
     const diffTime = Math.abs(now - publishDate);
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
-    if (diffDays === 1) return '1 day ago';
-    if (diffDays < 30) return `${diffDays} days ago`;
-    if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;
-    return `${Math.floor(diffDays / 365)} years ago`;
+
+    if (diffDays === 1) return t('one_day_ago');
+    if (diffDays < 30) return t('days_ago', { days: diffDays });
+    if (diffDays < 365) return t('months_ago', { months: Math.floor(diffDays / 30) });
+    return t('years_ago', { years: Math.floor(diffDays / 365) });
   };
 
   const renderItem = ({ item, index }) => {
@@ -136,35 +138,35 @@ const PodcastScreen = ({ navigation }) => {
         activeOpacity={0.8}
       >
         <View style={styles.thumbnailContainer}>
-          <Image 
-            source={{ uri: thumbnails.high?.url || thumbnails.medium.url }} 
-            style={styles.thumbnail} 
+          <Image
+            source={{ uri: thumbnails?.high?.url || thumbnails?.default?.url }}
+            style={styles.thumbnail}
+            resizeMode="cover"
           />
           <View style={styles.playButton}>
-            <Ionicons name="play" size={24} color={colors.white} />
+            <Ionicons name="play" size={20} color="white" />
           </View>
           {index === 0 && (
             <View style={styles.featuredBadge}>
-              <Ionicons name="star" size={16} color={colors.white} />
-              <Text style={styles.featuredText}>Latest</Text>
+              <MaterialIcons name="star" size={16} color="white" />
+              <Text style={styles.featuredText}>{t('latest')}</Text>
             </View>
           )}
         </View>
         
         <View style={styles.contentContainer}>
           <Text style={styles.title} numberOfLines={2}>{title}</Text>
-          <Text style={styles.description} numberOfLines={2}>
-            {description || 'Brain stroke awareness and prevention tips'}
+          <Text style={styles.description} numberOfLines={3}>
+            {description || t('brain_stroke_awareness_prevention_tips')}
           </Text>
-          
           <View style={styles.metaInfo}>
             <View style={styles.metaItem}>
-              <Ionicons name="time-outline" size={16} color={colors.textSecondary} />
+              <MaterialIcons name="access-time" size={14} color={colors.textMuted} />
               <Text style={styles.metaText}>{formatDuration(publishedAt)}</Text>
             </View>
             <View style={styles.metaItem}>
-              <MaterialIcons name="health-and-safety" size={16} color={colors.secondary} />
-              <Text style={styles.healthTag}>Health Education</Text>
+              <MaterialIcons name="local-hospital" size={14} color={colors.secondary} />
+              <Text style={styles.healthTag}>{t('health_education')}</Text>
             </View>
           </View>
         </View>
@@ -174,14 +176,13 @@ const PodcastScreen = ({ navigation }) => {
 
   const renderEmptyState = () => (
     <View style={styles.emptyState}>
-      <Ionicons name="videocam-outline" size={64} color={colors.textMuted} />
-      <Text style={styles.emptyTitle}>No Podcasts Available</Text>
+      <MaterialIcons name="video-library" size={64} color={colors.textMuted} />
+      <Text style={styles.emptyTitle}>{t('no_podcasts_available')}</Text>
       <Text style={styles.emptyText}>
-        We're working on bringing you the latest health awareness content. Check back soon!
+        {t('working_on_bringing_health_content')}
       </Text>
       <Button
-        title="Retry"
-        variant="outline"
+        title={t('retry')}
         onPress={() => fetchVideos()}
         style={styles.retryButton}
       />
@@ -191,53 +192,43 @@ const PodcastScreen = ({ navigation }) => {
   const renderHeader = () => (
     <View style={styles.headerContent}>
       <View style={styles.titleSection}>
-        <Text style={styles.heading}>Health Podcasts</Text>
-        <Text style={styles.subheading}>Brain Stroke Awareness & Prevention</Text>
+        <Text style={styles.heading}>{t('health_podcasts')}</Text>
+        <Text style={styles.subheading}>{t('brain_stroke_awareness_prevention')}</Text>
       </View>
       
       <View style={styles.statsContainer}>
         <View style={styles.statItem}>
           <Text style={styles.statNumber}>{videos.length}</Text>
-          <Text style={styles.statLabel}>Episodes</Text>
+          <Text style={styles.statLabel}>{t('episodes')}</Text>
         </View>
         <View style={styles.statItem}>
-          <Text style={styles.statNumber}>Free</Text>
-          <Text style={styles.statLabel}>Access</Text>
+          <Text style={styles.statNumber}>{t('free')}</Text>
+          <Text style={styles.statLabel}>{t('access')}</Text>
         </View>
       </View>
       
-      <Text style={styles.channelInfo}>
-        <Ionicons name="tv-outline" size={16} color={colors.primary} /> Brainline Channel
-      </Text>
+      <Text style={styles.channelInfo}>{t('brainline_channel')}</Text>
     </View>
   );
 
   if (loading) {
     return (
-      <View style={[styles.container, { paddingTop: insets.top }]}>
-        <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
-        <Header navigation={navigation} title="Podcasts" currentScreen="Podcast" />
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color={colors.primary} />
-          <Text style={styles.loadingText}>Loading health podcasts...</Text>
-        </View>
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={colors.primary} />
+        <Text style={styles.loadingText}>{t('loading_health_podcasts')}</Text>
       </View>
     );
   }
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
-      <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.primary} />
       
       {/* Fixed Header with proper spacing */}
-      <View style={styles.headerContainer}>
-        <Header 
-          navigation={navigation} 
-          title="Podcasts" 
-          currentScreen="Podcast"
-        />
+      <View style={[styles.headerContainer, { paddingTop: insets.top }]}>
+        <Header />
       </View>
-      
+
       <FlatList
         data={videos}
         renderItem={renderItem}
@@ -245,8 +236,8 @@ const PodcastScreen = ({ navigation }) => {
         ListHeaderComponent={renderHeader}
         ListEmptyComponent={renderEmptyState}
         refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
+          <RefreshControl 
+            refreshing={refreshing} 
             onRefresh={onRefresh}
             colors={[colors.primary]}
             tintColor={colors.primary}
@@ -255,7 +246,7 @@ const PodcastScreen = ({ navigation }) => {
         contentContainerStyle={styles.listContent}
         showsVerticalScrollIndicator={false}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -279,7 +270,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  
   // Fixed header container to prevent cut-off
   headerContainer: {
     zIndex: 1000,
@@ -290,24 +280,20 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 6,
   },
-  
   loadingContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
-  
   loadingText: {
     marginTop: 16,
-    fontSize: 32,
+    fontSize: 16,
     color: colors.textSecondary,
   },
-  
   listContent: {
     paddingBottom: 100,
   },
-  
   headerContent: {
     padding: 20,
     backgroundColor: colors.cardBackground,
@@ -315,47 +301,39 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  
   titleSection: {
     marginBottom: 20,
   },
-  
   heading: {
-    fontSize: 48,
+    fontSize: 32,
     fontWeight: 'bold',
     color: colors.textPrimary,
     marginBottom: 4,
   },
-  
   subheading: {
-    fontSize: 20,
+    fontSize: 18,
     color: colors.textSecondary,
   },
-  
   statsContainer: {
     flexDirection: 'row',
     marginBottom: 16,
     gap: 32,
   },
-  
   statItem: {
     alignItems: 'center',
   },
-  
   statNumber: {
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.primary,
   },
-  
   statLabel: {
-    fontSize: 18,
+    fontSize: 14,
     color: colors.textSecondary,
     marginTop: 4,
   },
-  
   channelInfo: {
-    fontSize: 20,
+    fontSize: 16,
     color: colors.textSecondary,
     backgroundColor: colors.background,
     paddingVertical: 8,
@@ -363,7 +341,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignSelf: 'flex-start',
   },
-  
   card: {
     marginHorizontal: 20,
     marginBottom: 20,
@@ -378,24 +355,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: colors.border,
   },
-  
   featuredCard: {
     borderColor: colors.primary,
     borderWidth: 2,
     shadowColor: colors.primary,
     shadowOpacity: 0.2,
   },
-  
   thumbnailContainer: {
     position: 'relative',
   },
-  
   thumbnail: {
     width: '100%',
     height: 200,
     backgroundColor: colors.border,
   },
-  
   playButton: {
     position: 'absolute',
     top: '50%',
@@ -409,7 +382,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  
   featuredBadge: {
     position: 'absolute',
     top: 12,
@@ -421,18 +393,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  
   featuredText: {
     color: colors.white,
-    fontSize: 18,
+    fontSize: 12,
     fontWeight: '600',
     marginLeft: 4,
   },
-  
   contentContainer: {
     padding: 16,
   },
-  
   title: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -440,38 +409,32 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     lineHeight: 24,
   },
-  
   description: {
-    fontSize: 16,
+    fontSize: 14,
     color: colors.textSecondary,
     marginBottom: 12,
     lineHeight: 20,
   },
-  
   metaInfo: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  
   metaItem: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  
   metaText: {
     fontSize: 12,
     color: colors.textSecondary,
     marginLeft: 4,
   },
-  
   healthTag: {
     fontSize: 12,
     color: colors.secondary,
     fontWeight: '600',
     marginLeft: 4,
   },
-  
   emptyState: {
     flex: 1,
     justifyContent: 'center',
@@ -479,7 +442,6 @@ const styles = StyleSheet.create({
     padding: 40,
     minHeight: height * 0.5,
   },
-  
   emptyTitle: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -487,7 +449,6 @@ const styles = StyleSheet.create({
     marginTop: 16,
     marginBottom: 8,
   },
-  
   emptyText: {
     fontSize: 16,
     color: colors.textSecondary,
@@ -495,7 +456,6 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     marginBottom: 24,
   },
-  
   retryButton: {
     minWidth: 120,
   },
